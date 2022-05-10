@@ -1,0 +1,79 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://UI/start-screen/StartScreenUI-Styles.tres" type="Theme" id=1]
+[ext_resource path="res://UI/start-screen/StartScreenUI.gd" type="Script" id=2]
+
+[node name="StartScreenUI" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = ExtResource( 1 )
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Title" type="RichTextLabel" parent="."]
+anchor_top = 0.2
+anchor_right = 1.0
+anchor_bottom = 0.5
+bbcode_enabled = true
+bbcode_text = "[center]Toss A Cherry To Your Bard[/center]"
+text = "Toss A Cherry To Your Bard"
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="Start" type="PanelContainer" parent="."]
+anchor_left = 0.4
+anchor_top = 0.55
+anchor_right = 0.6
+anchor_bottom = 0.65
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Button" type="Button" parent="Start"]
+margin_left = 7.0
+margin_top = 7.0
+margin_right = 249.0
+margin_bottom = 65.0
+grow_horizontal = 2
+grow_vertical = 2
+focus_neighbour_top = NodePath("../../Exit/Button")
+focus_neighbour_bottom = NodePath("../../Exit/Button")
+focus_next = NodePath("../../Exit/Button")
+focus_previous = NodePath("../../Exit/Button")
+mouse_default_cursor_shape = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+keep_pressed_outside = true
+text = "Start Game"
+
+[node name="Exit" type="PanelContainer" parent="."]
+anchor_left = 0.4
+anchor_top = 0.7
+anchor_right = 0.6
+anchor_bottom = 0.8
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Button" type="Button" parent="Exit"]
+margin_left = 7.0
+margin_top = 7.0
+margin_right = 249.0
+margin_bottom = 65.0
+grow_horizontal = 2
+grow_vertical = 2
+focus_neighbour_top = NodePath("../../Start/Button")
+focus_neighbour_bottom = NodePath("../../Start/Button")
+focus_next = NodePath("../../Start/Button")
+focus_previous = NodePath("../../Start/Button")
+mouse_default_cursor_shape = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+keep_pressed_outside = true
+text = "Exit"
+
+[connection signal="pressed" from="Start/Button" to="." method="_on_StartButton_pressed"]
+[connection signal="pressed" from="Exit/Button" to="." method="_on_ExitButton_pressed"]

@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/Cracking_Crunching_Branch_Short_06.wav-e9b18da668ad2e9a5e3a7ea317860a4b.sample"
+
+[deps]
+
+source_file="res://assets/Sound/44.1 General Library (Samples)/Cracking_Crunching_Branch_Short_06.wav"
+dest_files=[ "res://.import/Cracking_Crunching_Branch_Short_06.wav-e9b18da668ad2e9a5e3a7ea317860a4b.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/text.wav-4993dde2a77774a2bdd43d109cccb909.sample"
+
+[deps]
+
+source_file="res://assets/Sound/sfxr.me/text.wav"
+dest_files=[ "res://.import/text.wav-4993dde2a77774a2bdd43d109cccb909.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

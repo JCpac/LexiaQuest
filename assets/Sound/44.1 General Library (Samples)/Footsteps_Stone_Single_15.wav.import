@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/Footsteps_Stone_Single_15.wav-0316f5acb869f9e8b2bb4db75dd3f773.sample"
+
+[deps]
+
+source_file="res://assets/Sound/44.1 General Library (Samples)/Footsteps_Stone_Single_15.wav"
+dest_files=[ "res://.import/Footsteps_Stone_Single_15.wav-0316f5acb869f9e8b2bb4db75dd3f773.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

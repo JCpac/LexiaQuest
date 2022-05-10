@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/Ambience_BRT_Morning_C01_Town_LOOP.wav-cacfdd7deb20402c6fd137fc058c368b.sample"
+
+[deps]
+
+source_file="res://assets/Sound/44.1 General Library (Samples)/Ambience_BRT_Morning_C01_Town_LOOP.wav"
+dest_files=[ "res://.import/Ambience_BRT_Morning_C01_Town_LOOP.wav-cacfdd7deb20402c6fd137fc058c368b.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0
