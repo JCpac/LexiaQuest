@@ -1,6 +1,6 @@
 [gd_scene load_steps=7 format=2]
 
-[ext_resource path="res://assets/Fonts/connection_ii/ConnectionII.tres" type="DynamicFont" id=1]
+[ext_resource path="res://UI/StartSign/StartSign-Font.tres" type="DynamicFont" id=1]
 [ext_resource path="res://addons/adbox/DialogueBox.gd" type="Script" id=2]
 [ext_resource path="res://assets/Sprites/sign_poster.png" type="Texture" id=3]
 [ext_resource path="res://assets/Sound/sfxr.me/text.wav" type="AudioStream" id=4]
@@ -43,9 +43,9 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-margin_left = -110.0
-margin_top = -60.0
-margin_right = 110.0
+margin_left = -140.0
+margin_top = -70.0
+margin_right = 140.0
 margin_bottom = -25.0
 __meta__ = {
 "_edit_use_anchors_": false
@@ -54,8 +54,8 @@ __meta__ = {
 [node name="RichTextLabel" type="RichTextLabel" parent="UI/Prompt"]
 margin_left = 7.0
 margin_top = 7.0
-margin_right = 213.0
-margin_bottom = 28.0
+margin_right = 273.0
+margin_bottom = 38.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
@@ -75,9 +75,9 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-margin_left = -170.0
-margin_top = -100.0
-margin_right = 170.0
+margin_left = -180.0
+margin_top = -120.0
+margin_right = 180.0
 margin_bottom = -20.0
 __meta__ = {
 "_edit_use_anchors_": false
@@ -86,8 +86,8 @@ __meta__ = {
 [node name="DialogueBox" type="NinePatchRect" parent="UI/Dialogue"]
 margin_left = 7.0
 margin_top = 7.0
-margin_right = 333.0
-margin_bottom = 73.0
+margin_right = 353.0
+margin_bottom = 93.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
