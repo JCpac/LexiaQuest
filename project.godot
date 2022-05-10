@@ -86,7 +86,7 @@ _global_script_class_icons={
 
 [application]
 
-config/name="Toss A Cherry To Your Bard"
+config/name="Dyslexia Platformer Project"
 run/main_scene="res://levels/StartScreen/StartScreen.tscn"
 config/icon="res://icon.png"
 
