@@ -1,0 +1,37 @@
+[gd_resource type="Theme" load_steps=8 format=2]
+
+[ext_resource path="res://UI/Button/Button-Font.tres" type="DynamicFont" id=1]
+[ext_resource path="res://UI/Button/Button-Focus.tres" type="StyleBox" id=2]
+[ext_resource path="res://assets/Fonts/OpenDyslexic/OpenDyslexic-Regular.otf" type="DynamicFontData" id=3]
+
+[sub_resource type="DynamicFont" id=1]
+size = 36
+outline_size = 1
+outline_color = Color( 0, 0, 0, 1 )
+use_mipmaps = true
+use_filter = true
+extra_spacing_char = 8
+font_data = ExtResource( 3 )
+
+[sub_resource type="DynamicFont" id=2]
+size = 24
+outline_size = 1
+outline_color = Color( 0, 0, 0, 1 )
+use_mipmaps = true
+use_filter = true
+extra_spacing_char = 4
+font_data = ExtResource( 3 )
+
+[sub_resource type="StyleBoxFlat" id=3]
+bg_color = Color( 0, 0, 0, 0.137255 )
+
+[sub_resource type="StyleBoxEmpty" id=4]
+
+[resource]
+Button/fonts/font = ExtResource( 1 )
+Button/styles/focus = ExtResource( 2 )
+Label/fonts/font = SubResource( 1 )
+LineEdit/fonts/font = SubResource( 2 )
+Panel/styles/panel = SubResource( 3 )
+PanelContainer/styles/panel = SubResource( 4 )
+VBoxContainer/constants/separation = 40
