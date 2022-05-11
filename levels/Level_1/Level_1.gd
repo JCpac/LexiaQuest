@@ -61,7 +61,7 @@ func loadDbContents() -> void:
 	# Expect JSON to have array as top-level element
 	dbContents = content.result #if typeof(content.result) == TYPE_ARRAY else null
 
-	print_debug("DB contents (%s):\n" % len(dbContents), dbContents, "\n")
+	print_debug("DB contents (%s):\n" % len(dbContents), dbContents)
 
 func setCameraBounds() -> void:
 	var camera: Camera2D = player.get_node("PlayerCamera")
@@ -131,7 +131,7 @@ func setupCherryCollectibles() -> void:
 
 	scoreCounter.setMaxScore(cherryCount)
 
-	print_debug(debugString % cherryCount, "\n")
+	print_debug("\n", debugString % cherryCount, "\n")
 
 func endGame() -> void:
 	player.paused = true
