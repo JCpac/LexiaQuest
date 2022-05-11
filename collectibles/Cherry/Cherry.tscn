@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=2]
 
-[ext_resource path="res://assets/Sprites/cherries.png" type="Texture" id=1]
+[ext_resource path="res://assets/Sprites/presents/Present-Closed.png" type="Texture" id=1]
 [ext_resource path="res://collectibles/Cherry/Cherry.gd" type="Script" id=2]
 [ext_resource path="res://assets/Sound/44.1 General Library (Samples)/Biting_Crunchy_Single_Close_01.wav" type="AudioStream" id=3]
 

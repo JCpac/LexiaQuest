@@ -97,7 +97,7 @@ func setupCherryCollectibles() -> void:
 	for position in usedCells:
 		var id: int = tileMap.get_cell(position.x, position.y)
 		var name: String = tileSet.tile_get_name(id)
-		if name == "cherries.png 0":
+		if name == "Present-Closed.png 0":
 			# Create and place cherry entity on tilemap position
 			var node = cherryScene.instance()
 			node.position = Vector2( position.x * cellSizeX + (0.5*cellSizeX), position.y * cellSizeY + (0.5*cellSizeY))

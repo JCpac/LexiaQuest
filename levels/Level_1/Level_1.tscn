@@ -3,7 +3,6 @@
 [ext_resource path="res://assets/Sprites/groundStraight.png" type="Texture" id=1]
 [ext_resource path="res://UI/level-timer/TimerUI.tscn" type="PackedScene" id=2]
 [ext_resource path="res://assets/Sprites/wood-bridges/start/BridgeStart0000.png" type="Texture" id=3]
-[ext_resource path="res://assets/Sprites/cherries.png" type="Texture" id=4]
 [ext_resource path="res://assets/Sprites/grass_7.png" type="Texture" id=5]
 [ext_resource path="res://UI/level-score/ScoreUI.tscn" type="PackedScene" id=6]
 [ext_resource path="res://levels/Level_1/Signs/StartSign/StartSign.tscn" type="PackedScene" id=7]
@@ -12,6 +11,7 @@
 [ext_resource path="res://assets/Sprites/rocks_small.png" type="Texture" id=10]
 [ext_resource path="res://assets/Sprites/rope/Rope0000.png" type="Texture" id=11]
 [ext_resource path="res://assets/Sprites/rocks_large.png" type="Texture" id=12]
+[ext_resource path="res://assets/Sprites/presents/Present-Closed.png" type="Texture" id=13]
 [ext_resource path="res://player/Player.tscn" type="PackedScene" id=15]
 [ext_resource path="res://assets/Sound/8bit 8pack/Level 2.wav" type="AudioStream" id=16]
 [ext_resource path="res://assets/Sprites/rocks_group.png" type="Texture" id=22]
@@ -80,8 +80,8 @@
 points = PoolVector2Array( 32, 32, 0, 32, 0, 0, 32, 0 )
 
 [sub_resource type="TileSet" id=19]
-0/name = "cherries.png 0"
-0/texture = ExtResource( 4 )
+0/name = "Present-Closed.png 0"
+0/texture = ExtResource( 13 )
 0/tex_offset = Vector2( 0, 0 )
 0/modulate = Color( 1, 1, 1, 1 )
 0/region = Rect2( 0, 0, 32, 32 )
