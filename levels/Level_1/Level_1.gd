@@ -1,9 +1,11 @@
 extends Node2D
 
 
-# PRELOADS
+# PRELOADS & CONSTS
 const cherryScene: PackedScene = preload("res://collectibles/Cherry/Cherry.tscn")
 const EndScreenUIScene: PackedScene = preload("res://UI/end-screen/EndScreenUI.tscn")
+
+const DB_PATH: String = "res://assets/Database/db.json"
 
 # EXPORTS
 export var levelBounds: Dictionary = {
@@ -24,6 +26,7 @@ onready var player: Player = $Player
 onready var timer: TimerUI = $CanvasLayer/TimerUI
 onready var collectibles: Node2D = $Collectibles
 onready var scoreCounter: ScoreUI = $CanvasLayer/ScoreUI
+var dbContents: Array
 var score: int = 0
 var endScreenMessage: String = "Your message here..."
 var paused: bool = false
@@ -37,6 +40,7 @@ func _ready():
 		"left": levelBounds.left
 	}
 
+	loadDbContents()
 	setupCherryCollectibles()
 	setCameraBounds()
 	adjustSkyScale()
@@ -46,6 +50,18 @@ func _process(_delta):
 		return
 
 	lockPlayerInLevelBounds()
+
+func loadDbContents() -> void:
+	# File handling and JSON parsing
+	var dbFile: File = File.new()
+	dbFile.open(DB_PATH, File.READ)
+	var content: JSONParseResult = JSON.parse(dbFile.get_as_text())
+	dbFile.close()
+
+	# Expect JSON to have array as top-level element
+	dbContents = content.result #if typeof(content.result) == TYPE_ARRAY else null
+
+	print_debug("DB contents (%s):\n" % len(dbContents), dbContents, "\n")
 
 func setCameraBounds() -> void:
 	var camera: Camera2D = player.get_node("PlayerCamera")
@@ -115,7 +131,7 @@ func setupCherryCollectibles() -> void:
 
 	scoreCounter.setMaxScore(cherryCount)
 
-	print_debug(debugString % cherryCount)
+	print_debug(debugString % cherryCount, "\n")
 
 func endGame() -> void:
 	player.paused = true
