@@ -69,4 +69,4 @@ func _setFocus() -> void:
 	answerLine.grab_focus()
 
 func _validateAnswer() -> bool:
-	return true
+	return answerLine.text == target
