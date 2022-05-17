@@ -92,3 +92,5 @@ caret_blink = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[connection signal="gui_input" from="QuizArea/HBoxContainer/RightSide/VBoxContainer/Answer" to="." method="_on_Answer_gui_input"]
