@@ -8,6 +8,8 @@ signal correct
 signal wrong
 
 # EXPORTS
+export(String) var debugTarget = "ball"
+export(int, 0, 10) var debugHintChars = 1
 
 # VARS
 onready var targetImage: TextureRect = $QuizArea/PanelContainer/HSplitContainer/Image/TextureRect
@@ -19,7 +21,7 @@ func _ready():
 	_setFocus()
 
 	if OS.is_debug_build() and get_parent() == get_tree().root:
-		prepareQuiz("ball", 6)
+		prepareQuiz(debugTarget, debugHintChars)
 
 func _gui_input(event):
 	if event is InputEventKey:
