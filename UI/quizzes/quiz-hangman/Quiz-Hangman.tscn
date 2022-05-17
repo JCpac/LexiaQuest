@@ -1,0 +1,151 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://assets/Database/Images/ball.jpg" type="Texture" id=1]
+[ext_resource path="res://UI/quizzes/Quiz-Styles.tres" type="Theme" id=2]
+[ext_resource path="res://UI/quizzes/quiz-write-prompt/Quiz-WritePrompt.gd" type="Script" id=3]
+
+[node name="Quiz-WritePrompt" type="PanelContainer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = ExtResource( 2 )
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_group_": true,
+"_edit_lock_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="Background" type="Panel" parent="."]
+margin_right = 1280.0
+margin_bottom = 720.0
+
+[node name="QuizArea" type="MarginContainer" parent="."]
+margin_right = 1280.0
+margin_bottom = 720.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="QuizArea"]
+margin_left = 50.0
+margin_top = 50.0
+margin_right = 1230.0
+margin_bottom = 670.0
+alignment = 1
+
+[node name="LeftSide" type="VBoxContainer" parent="QuizArea/HBoxContainer"]
+margin_right = 588.0
+margin_bottom = 620.0
+size_flags_horizontal = 3
+
+[node name="Explanation" type="RichTextLabel" parent="QuizArea/HBoxContainer/LeftSide"]
+margin_right = 588.0
+margin_bottom = 15.0
+bbcode_enabled = true
+bbcode_text = "[center]Seleciona as letras que completam o nome da imagem[/center]"
+text = "Seleciona as letras que completam o nome da imagem"
+fit_content_height = true
+scroll_active = false
+
+[node name="Image" type="MarginContainer" parent="QuizArea/HBoxContainer/LeftSide"]
+margin_top = 55.0
+margin_right = 588.0
+margin_bottom = 620.0
+size_flags_vertical = 3
+
+[node name="TextureRect" type="TextureRect" parent="QuizArea/HBoxContainer/LeftSide/Image"]
+margin_left = 50.0
+margin_top = 50.0
+margin_right = 538.0
+margin_bottom = 515.0
+texture = ExtResource( 1 )
+expand = true
+stretch_mode = 6
+
+[node name="RightSide" type="MarginContainer" parent="QuizArea/HBoxContainer"]
+margin_left = 592.0
+margin_right = 1180.0
+margin_bottom = 620.0
+size_flags_horizontal = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="QuizArea/HBoxContainer/RightSide"]
+margin_left = 50.0
+margin_top = 50.0
+margin_right = 538.0
+margin_bottom = 570.0
+
+[node name="Target" type="Label" parent="QuizArea/HBoxContainer/RightSide/VBoxContainer"]
+margin_right = 488.0
+margin_bottom = 63.0
+text = "________"
+align = 1
+
+[node name="Answers" type="GridContainer" parent="QuizArea/HBoxContainer/RightSide/VBoxContainer"]
+margin_top = 261.0
+margin_right = 488.0
+margin_bottom = 361.0
+size_flags_vertical = 6
+columns = 4
+
+[node name="Answer1" type="Button" parent="QuizArea/HBoxContainer/RightSide/VBoxContainer/Answers"]
+margin_right = 119.0
+margin_bottom = 48.0
+size_flags_horizontal = 3
+keep_pressed_outside = true
+text = "a"
+
+[node name="Answer2" type="Button" parent="QuizArea/HBoxContainer/RightSide/VBoxContainer/Answers"]
+margin_left = 123.0
+margin_right = 242.0
+margin_bottom = 48.0
+size_flags_horizontal = 3
+keep_pressed_outside = true
+text = "a"
+
+[node name="Answer3" type="Button" parent="QuizArea/HBoxContainer/RightSide/VBoxContainer/Answers"]
+margin_left = 246.0
+margin_right = 365.0
+margin_bottom = 48.0
+size_flags_horizontal = 3
+keep_pressed_outside = true
+text = "a"
+
+[node name="Answer4" type="Button" parent="QuizArea/HBoxContainer/RightSide/VBoxContainer/Answers"]
+margin_left = 369.0
+margin_right = 488.0
+margin_bottom = 48.0
+size_flags_horizontal = 3
+keep_pressed_outside = true
+text = "a"
+
+[node name="Answer5" type="Button" parent="QuizArea/HBoxContainer/RightSide/VBoxContainer/Answers"]
+margin_top = 52.0
+margin_right = 119.0
+margin_bottom = 100.0
+size_flags_horizontal = 3
+keep_pressed_outside = true
+text = "a"
+
+[node name="Answer6" type="Button" parent="QuizArea/HBoxContainer/RightSide/VBoxContainer/Answers"]
+margin_left = 123.0
+margin_top = 52.0
+margin_right = 242.0
+margin_bottom = 100.0
+size_flags_horizontal = 3
+keep_pressed_outside = true
+text = "a"
+
+[node name="Answer7" type="Button" parent="QuizArea/HBoxContainer/RightSide/VBoxContainer/Answers"]
+margin_left = 246.0
+margin_top = 52.0
+margin_right = 365.0
+margin_bottom = 100.0
+size_flags_horizontal = 3
+keep_pressed_outside = true
+text = "a"
+
+[node name="Answer8" type="Button" parent="QuizArea/HBoxContainer/RightSide/VBoxContainer/Answers"]
+margin_left = 369.0
+margin_top = 52.0
+margin_right = 488.0
+margin_bottom = 100.0
+size_flags_horizontal = 3
+keep_pressed_outside = true
+text = "a"
