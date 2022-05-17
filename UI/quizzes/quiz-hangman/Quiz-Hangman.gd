@@ -12,9 +12,9 @@ export(String) var debugTarget = "ball"
 export(int, 0, 10) var debugHintChars = 1
 
 # VARS
-onready var targetImage: TextureRect = $QuizArea/HBoxContainer/LeftSide/Image/TextureRect
-onready var targetLabel: Label = $QuizArea/HBoxContainer/RightSide/VBoxContainer/Target
-onready var answerLine: LineEdit = $QuizArea/HBoxContainer/RightSide/VBoxContainer/Answer
+onready var targetImage: TextureRect = $QuizArea/PanelContainer/HSplitContainer/Image/TextureRect
+onready var targetLabel: Label = $QuizArea/PanelContainer/HSplitContainer/Control/Label
+onready var answerLine: LineEdit = $QuizArea/PanelContainer/HSplitContainer/Control/LineEdit
 var target: String
 
 func _ready():
@@ -22,6 +22,18 @@ func _ready():
 
 	if OS.is_debug_build() and get_parent() == get_tree().root:
 		prepareQuiz(debugTarget, debugHintChars)
+
+func _gui_input(event):
+	if event is InputEventKey:
+		if event.is_action_pressed("ui_accept"):
+			if _validateAnswer():
+				emit_signal("correct")
+
+				print_debug("Quiz Write Prompt was correct")
+			else:
+				emit_signal("wrong")
+
+				print_debug("Quiz Write Prompt was wrong")
 
 func prepareQuiz(targetWord: String, numOfHintChars: int) -> void:
 	self.target = targetWord
@@ -60,15 +72,3 @@ func _setFocus() -> void:
 
 func _validateAnswer() -> bool:
 	return answerLine.text == target
-
-func _on_Answer_gui_input(event: InputEvent) -> void:
-	if event is InputEventKey:
-		if event.is_action_pressed("ui_accept"):
-			if _validateAnswer():
-				emit_signal("correct")
-
-				print_debug("Quiz Write Prompt was correct")
-			else:
-				emit_signal("wrong")
-
-				print_debug("Quiz Write Prompt was wrong")
