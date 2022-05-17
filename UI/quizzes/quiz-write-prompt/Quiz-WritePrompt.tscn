@@ -37,15 +37,15 @@ size_flags_horizontal = 3
 
 [node name="Explanation" type="RichTextLabel" parent="QuizArea/HBoxContainer/LeftSide"]
 margin_right = 588.0
-margin_bottom = 15.0
+margin_bottom = 64.0
 bbcode_enabled = true
-bbcode_text = "[center]Seleciona as letras que completam o nome da imagem[/center]"
-text = "Seleciona as letras que completam o nome da imagem"
+bbcode_text = "[center]Escreve o nome da imagem[/center]"
+text = "Escreve o nome da imagem"
 fit_content_height = true
 scroll_active = false
 
 [node name="Image" type="MarginContainer" parent="QuizArea/HBoxContainer/LeftSide"]
-margin_top = 55.0
+margin_top = 104.0
 margin_right = 588.0
 margin_bottom = 620.0
 size_flags_vertical = 3
@@ -54,7 +54,7 @@ size_flags_vertical = 3
 margin_left = 50.0
 margin_top = 50.0
 margin_right = 538.0
-margin_bottom = 515.0
+margin_bottom = 466.0
 texture = ExtResource( 1 )
 expand = true
 stretch_mode = 7
@@ -86,7 +86,7 @@ margin_bottom = 337.0
 max_length = 32
 context_menu_enabled = false
 clear_button_enabled = true
-placeholder_text = "Write your answer here"
+placeholder_text = "Escreve a tua resposta aqui"
 placeholder_alpha = 0.7
 caret_blink = true
 __meta__ = {
