@@ -12,9 +12,9 @@ export(String) var debugTarget = "ball"
 export(int, 0, 10) var debugHintChars = 1
 
 # VARS
-onready var targetImage: TextureRect = $QuizArea/PanelContainer/HSplitContainer/Image/TextureRect
-onready var targetLabel: Label = $QuizArea/PanelContainer/HSplitContainer/Control/Label
-onready var answerLine: LineEdit = $QuizArea/PanelContainer/HSplitContainer/Control/LineEdit
+onready var targetImage: TextureRect = $QuizArea/HBoxContainer/LeftSide/Image/TextureRect
+onready var targetLabel: Label = $QuizArea/HBoxContainer/RightSide/VBoxContainer/Target
+onready var answerLine: LineEdit = $QuizArea/HBoxContainer/RightSide/VBoxContainer/Answer
 var target: String
 
 func _ready():
