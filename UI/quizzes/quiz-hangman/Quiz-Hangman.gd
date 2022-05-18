@@ -31,18 +31,6 @@ func _ready():
 	if OS.is_debug_build() and get_parent() == get_tree().root:
 		prepareQuiz(debugTarget, debugHintChars, debugNumAnswers)
 
-func _gui_input(event):
-	if event is InputEventKey:
-		if event.is_action_pressed("ui_accept"):
-			if _validateAnswer():
-				emit_signal("correct")
-
-				print_debug("Quiz Write Prompt was correct")
-			else:
-				emit_signal("wrong")
-
-				print_debug("Quiz Write Prompt was wrong")
-
 func prepareQuiz(targetWord: String, numOfHintChars: int, numOfAnswerButtons: int) -> void:
 	self.target = targetWord
 
@@ -126,9 +114,27 @@ func _generateAnswerButtons(targetWord: String, numOfAnswerButtons: int, hintCha
 		# Generate duplicate buttons and assign them values
 		var newButton: Button = answerButton.duplicate()
 		newButton.text = i
+		newButton.connect("pressed", self, "_on_AnswerButton_pressed", [i])
 		answerButtons.append(newButton)
 
 	return answerButtons
 
-func _validateAnswer() -> bool:
-	return true
+func _validateTargetIsComplete() -> bool:
+	return self.target.similarity(targetLabel.text) == 1
+
+func _on_AnswerButton_pressed(value: String) -> void:
+	# Check if chosen character exists in target word and is hidden in target word's label
+	for i in range(self.target.length()):
+		if value == self.target[i] and targetLabel.text[i] == "_":
+			# Reveal character
+			targetLabel.text[i] = value
+			emit_signal("correct")
+			print_debug("Quiz Hangman: Letter '%s' was correct" % value)
+			if _validateTargetIsComplete():
+				emit_signal("completed")
+				print_debug("Quiz Hangman: Target '%s' completed" % self.target)
+			return
+
+	# Character does not exist in target or all of its occurrences were already revealed before
+	emit_signal("wrong")
+	print_debug("Quiz Hangman: Letter '%s' was wrong" % value)
