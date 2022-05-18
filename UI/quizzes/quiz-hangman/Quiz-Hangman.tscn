@@ -4,7 +4,7 @@
 [ext_resource path="res://UI/quizzes/Quiz-Styles.tres" type="Theme" id=2]
 [ext_resource path="res://UI/quizzes/quiz-hangman/Quiz-Hangman.gd" type="Script" id=3]
 
-[node name="Quiz-WritePrompt" type="PanelContainer"]
+[node name="Quiz-Hangman" type="PanelContainer"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 theme = ExtResource( 2 )
