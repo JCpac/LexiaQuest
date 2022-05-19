@@ -1,0 +1,110 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://UI/StartSign/StartSign-Font.tres" type="DynamicFont" id=1]
+[ext_resource path="res://addons/adbox/DialogueBox.gd" type="Script" id=2]
+[ext_resource path="res://assets/Sprites/sign_poster.png" type="Texture" id=3]
+[ext_resource path="res://assets/Sound/sfxr.me/text.wav" type="AudioStream" id=4]
+[ext_resource path="res://levels/Level_1/Signs/StartSign/StartSign.gd" type="Script" id=5]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 16, 32 )
+
+[node name="StartSign" type="Node2D"]
+script = ExtResource( 5 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Area2D" type="Area2D" parent="."]
+collision_layer = 4
+monitorable = false
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2( 0, -16 )
+shape = SubResource( 1 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Sprite" type="Sprite" parent="."]
+texture = ExtResource( 3 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="UI" type="Node2D" parent="."]
+z_index = 4
+
+[node name="Prompt" type="PanelContainer" parent="UI"]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -140.0
+margin_top = -70.0
+margin_right = 140.0
+margin_bottom = -25.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RichTextLabel" type="RichTextLabel" parent="UI/Prompt"]
+margin_left = 7.0
+margin_top = 7.0
+margin_right = 273.0
+margin_bottom = 38.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/normal_font = ExtResource( 1 )
+bbcode_enabled = true
+bbcode_text = "[center]Press ENTER to read the sign[/center]"
+text = "Press ENTER to read the sign"
+scroll_active = false
+__meta__ = {
+"_edit_lock_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="Dialogue" type="PanelContainer" parent="UI"]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -180.0
+margin_top = -120.0
+margin_right = 180.0
+margin_bottom = -20.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="DialogueBox" type="NinePatchRect" parent="UI/Dialogue"]
+margin_left = 7.0
+margin_top = 7.0
+margin_right = 353.0
+margin_bottom = 93.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_lock_": true,
+"_edit_use_anchors_": false
+}
+message_sound = ExtResource( 4 )
+font = ExtResource( 1 )
+action_name = "ui_accept"
+wait_time = 0.05
+block_time = 0.01
+margin_top_bottom = 0
+margin_left_right = 0
+
+[connection signal="body_entered" from="Area2D" to="." method="_on_Area2D_body_entered"]
+[connection signal="body_exited" from="Area2D" to="." method="_on_Area2D_body_exited"]
+[connection signal="dialogue_exit" from="UI/Dialogue/DialogueBox" to="." method="_on_DialogueBox_dialogue_exit"]
