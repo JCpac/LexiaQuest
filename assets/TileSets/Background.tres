@@ -1,8 +1,7 @@
-[gd_resource type="TileSet" load_steps=4 format=2]
+[gd_resource type="TileSet" load_steps=3 format=2]
 
 [ext_resource path="res://assets/Sprites/caveEntrance.png" type="Texture" id=1]
 [ext_resource path="res://assets/Sprites/caveBackground.png" type="Texture" id=2]
-[ext_resource path="res://assets/Sprites/background.png" type="Texture" id=3]
 
 [resource]
 0/name = "caveEntrance.png 0"
@@ -33,17 +32,3 @@
 1/shape_one_way_margin = 0.0
 1/shapes = [  ]
 1/z_index = 0
-2/name = "background.png 2"
-2/texture = ExtResource( 3 )
-2/tex_offset = Vector2( 0, 0 )
-2/modulate = Color( 1, 1, 1, 1 )
-2/region = Rect2( 0, 0, 1600, 896 )
-2/tile_mode = 0
-2/occluder_offset = Vector2( 0, 0 )
-2/navigation_offset = Vector2( 0, 0 )
-2/shape_offset = Vector2( 0, 0 )
-2/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
-2/shape_one_way = false
-2/shape_one_way_margin = 0.0
-2/shapes = [  ]
-2/z_index = 0
