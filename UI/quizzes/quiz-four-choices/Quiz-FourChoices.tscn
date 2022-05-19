@@ -35,7 +35,7 @@ split_offset = 512
 dragger_visibility = 1
 
 [node name="Image" type="MarginContainer" parent="QuizArea/PanelContainer/HSplitContainer"]
-margin_right = 512.0
+margin_right = 612.0
 margin_bottom = 576.0
 __meta__ = {
 "_edit_group_": true,
@@ -43,8 +43,10 @@ __meta__ = {
 }
 
 [node name="TextureRect" type="TextureRect" parent="QuizArea/PanelContainer/HSplitContainer/Image"]
-margin_right = 512.0
-margin_bottom = 576.0
+margin_left = 50.0
+margin_top = 50.0
+margin_right = 562.0
+margin_bottom = 526.0
 texture = ExtResource( 1 )
 expand = true
 stretch_mode = 7
@@ -53,35 +55,35 @@ __meta__ = {
 }
 
 [node name="Answers" type="VBoxContainer" parent="QuizArea/PanelContainer/HSplitContainer"]
-margin_left = 524.0
+margin_left = 624.0
 margin_right = 1024.0
 margin_bottom = 576.0
 alignment = 1
 
 [node name="Button1" type="Button" parent="QuizArea/PanelContainer/HSplitContainer/Answers"]
 margin_top = 132.0
-margin_right = 500.0
+margin_right = 400.0
 margin_bottom = 180.0
 keep_pressed_outside = true
 text = "Answer 1"
 
 [node name="Button2" type="Button" parent="QuizArea/PanelContainer/HSplitContainer/Answers"]
 margin_top = 220.0
-margin_right = 500.0
+margin_right = 400.0
 margin_bottom = 268.0
 keep_pressed_outside = true
 text = "Answer 2"
 
 [node name="Button3" type="Button" parent="QuizArea/PanelContainer/HSplitContainer/Answers"]
 margin_top = 308.0
-margin_right = 500.0
+margin_right = 400.0
 margin_bottom = 356.0
 keep_pressed_outside = true
 text = "Answer 3"
 
 [node name="Button4" type="Button" parent="QuizArea/PanelContainer/HSplitContainer/Answers"]
 margin_top = 396.0
-margin_right = 500.0
+margin_right = 400.0
 margin_bottom = 444.0
 keep_pressed_outside = true
 text = "Answer 4"
