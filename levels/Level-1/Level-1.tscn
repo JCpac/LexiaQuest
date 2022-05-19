@@ -34,7 +34,7 @@ tile_data = PoolIntArray( -393199, 1, 0, -393198, 1, 0, -393197, 1, 0, -327664, 
 [node name="Collectible Tiles" type="TileMap" parent="."]
 tile_set = ExtResource( 13 )
 cell_size = Vector2( 32, 32 )
-collision_layer = 4
+collision_layer = 0
 collision_mask = 0
 format = 1
 tile_data = PoolIntArray( -458668, 0, 0, 917586, 0, 0, 1114170, 536870912, 0, 1245204, 536870912, 0, 1310758, 0, 0, 1966098, 536870912, 0 )
