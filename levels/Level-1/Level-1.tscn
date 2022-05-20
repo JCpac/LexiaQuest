@@ -4,22 +4,28 @@
 [ext_resource path="res://UI/level-timer/TimerUI.tscn" type="PackedScene" id=2]
 [ext_resource path="res://assets/TileSets/Details.tres" type="TileSet" id=3]
 [ext_resource path="res://assets/TileSets/Background.tres" type="TileSet" id=4]
+[ext_resource path="res://levels/Level-1/Level-1.gd" type="Script" id=5]
 [ext_resource path="res://UI/level-score/ScoreUI.tscn" type="PackedScene" id=6]
 [ext_resource path="res://levels/Level_1/Signs/StartSign/StartSign.tscn" type="PackedScene" id=7]
 [ext_resource path="res://levels/Level_1/Signs/EndSign/EndSign.tscn" type="PackedScene" id=8]
 [ext_resource path="res://assets/TileSets/Presents.tres" type="TileSet" id=13]
 [ext_resource path="res://player/Player.tscn" type="PackedScene" id=15]
 [ext_resource path="res://assets/Sound/8bit 8pack/Level 2.wav" type="AudioStream" id=16]
-[ext_resource path="res://levels/Level_1/Level_1.gd" type="Script" id=38]
 [ext_resource path="res://assets/Sprites/background.png" type="Texture" id=50]
 
 [sub_resource type="RectangleShape2D" id=24]
 extents = Vector2( 8, 32 )
 
 [node name="Level-1" type="Node2D"]
-script = ExtResource( 38 )
+script = ExtResource( 5 )
 __meta__ = {
 "_edit_lock_": true
+}
+levelBounds = {
+"bottom": 1216,
+"left": -384,
+"right": 4032,
+"top": -440
 }
 timerStart = 1200
 
