@@ -33,7 +33,7 @@ var paused: bool = false
 var currentLevelBounds: Dictionary
 
 # METHODS
-func _ready():
+func _init():
 	currentLevelBounds = {
 		"top": levelBounds.top,
 		"right": levelBounds.right,
@@ -41,6 +41,7 @@ func _ready():
 		"left": levelBounds.left
 	}
 
+func _ready():
 	# loadDbContents()
 	setupPresentCollectibles()
 	setCameraBounds()
