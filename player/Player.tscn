@@ -126,7 +126,7 @@ __meta__ = {
 ACCEL_GRAVITY = 30
 MAX_SPEED_UP = -800
 MAX_SPEED_DOWN = 800
-ACCEL_JUMP = -550
+ACCEL_JUMP = -600
 MAX_SPEED_WALK = 250
 
 [node name="WallSlidingDetector" parent="." instance=ExtResource( 2 )]

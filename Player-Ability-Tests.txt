@@ -1,0 +1,30 @@
+Let 64 pixels be 1 unit.
+Each large dirt block has dimensions (1, 1).
+Each small dirt block and each crate have dimensions (0.5, 0.5).
+
+Player abilities:
+	- Floor jump:
+		- height clearance of 1 (almost 1.5, but not quite)
+		- (2.5, 0)
+		- (2, 1)
+		- (3, -1)
+		- (3.5, -2), but it's too close, it's best to use (3, -2) in-game
+		- (3.5, -3)
+		
+	- Wall-jump:
+		- distance of 2 between walls
+		
+	- Climbing a wall (both 2-wall wall-jumps and same-wall wall-jumps):
+		- ceiling with 1 as the minimum height (0.5 is too annoying, especially for same-wall wall-jumps)
+		
+Platforming challenges:
+	- Jumping over a pit:
+		- Easy:
+			- (2, 0)
+			- (1.5, 1)
+			
+		- Medium:
+			- ()
+			
+		- Hard:
+			- (2.5, 0)
