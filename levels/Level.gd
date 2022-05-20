@@ -26,6 +26,7 @@ onready var player: Player = $Player
 onready var timer: TimerUI = $CanvasLayer/TimerUI
 onready var collectibles: Node2D = $Collectibles
 onready var scoreCounter: ScoreUI = $CanvasLayer/ScoreUI
+onready var quizCompleteTimer: Timer = $QuizCompleteTimer
 var dbContents: Array
 var score: int = 0
 var endScreenMessage: String = "Your message here..."

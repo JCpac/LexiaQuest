@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://assets/TileSets/Foreground.tres" type="TileSet" id=1]
 [ext_resource path="res://UI/level-timer/TimerUI.tscn" type="PackedScene" id=2]
@@ -8,6 +8,7 @@
 [ext_resource path="res://UI/level-score/ScoreUI.tscn" type="PackedScene" id=6]
 [ext_resource path="res://levels/Level_1/Signs/StartSign/StartSign.tscn" type="PackedScene" id=7]
 [ext_resource path="res://levels/Level_1/Signs/EndSign/EndSign.tscn" type="PackedScene" id=8]
+[ext_resource path="res://UI/quizzes/quiz-four-choices/syllables/Quiz-FourChoices-Syllables.tscn" type="PackedScene" id=9]
 [ext_resource path="res://assets/TileSets/Presents.tres" type="TileSet" id=13]
 [ext_resource path="res://player/Player.tscn" type="PackedScene" id=15]
 [ext_resource path="res://assets/Sound/8bit 8pack/Level 2.wav" type="AudioStream" id=16]
@@ -140,8 +141,16 @@ autoplay = true
 
 [node name="ScoreUI" parent="CanvasLayer" instance=ExtResource( 6 )]
 
+[node name="Quiz-FourChoices-Syllables" parent="CanvasLayer" instance=ExtResource( 9 )]
+visible = false
+
+[node name="QuizCompleteTimer" type="Timer" parent="."]
+wait_time = 2.0
+one_shot = true
+
 [connection signal="body_exited" from="Entrance" to="." method="_on_Entrance_body_exited"]
 [connection signal="playerHasCrossed" from="Signs/StartSign" to="." method="_on_StartSign_playerHasCrossed"]
 [connection signal="playerReached" from="Signs/EndSign" to="." method="_on_EndSign_playerReached"]
 [connection signal="died" from="Player" to="." method="_on_Player_died"]
 [connection signal="timeout" from="CanvasLayer/TimerUI" to="." method="_on_TimerUI_timeout"]
+[connection signal="correct" from="CanvasLayer/Quiz-FourChoices-Syllables" to="." method="_on_Quiz_correct"]
