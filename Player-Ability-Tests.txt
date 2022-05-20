@@ -20,11 +20,42 @@ Player abilities:
 Platforming challenges:
 	- Jumping over a pit:
 		- Easy:
-			- (2, 0)
-			- (1.5, 1)
+			- Floor jumps:
+				- (2, 0)
+				- (1.5, 1)
+				- (2, -1)
+				- (2, -2)
+				- landing floor with at least 1 space of width
+			
+			- Wall-jumps:
+				- distance between walls up to 1.5
+				- ceiling at 1.5 or higher
+				- top of wall with at least 1.5 spaces of width
 			
 		- Medium:
-			- ()
+			- Floor jumps:
+				- (2, 0)
+				- (1.5, 1)
+				- (3, -1)
+				- (3, -2)
+				- (3, -3)
+				- landing floor with at least 0.5 space of width
+			
+			- Wall-jumps:
+				- distance between walls up to 1.5
+				- ceiling at 1 or higher
+				- top of wall with at least 1 space of width
 			
 		- Hard:
-			- (2.5, 0)
+			- Floor jumps:
+				- (2.5, 0)
+				- (2, 1)
+				- (3, -1)
+				- (3, -2)
+				- (3.5, -3)
+				- landing floor with at least 0.5 spaces of width
+			
+			- Wall-jumps:
+				- distance between walls up to 2 (maybe 1.5? with 2, players have to move to reach the other wall. Or I could increase the wall-jump friction timer a bit)
+				- ceiling at 1 or higher
+				- top of wall with at least 0.5 spaces of width
