@@ -8,21 +8,21 @@ const dustCloudScene: PackedScene =  preload("res://player/dust-cloud/DustCloud.
 signal died
 
 # EXPORTS
+# Vertical movement properties
+export(int, 0, 50) var ACCEL_GRAVITY: int = 35	# In 1 frame, how many pixels the player will accelerate downwards
+export(int, -3000, 0, 10) var MAX_SPEED_UP: int = -1500
+export(int, 0, 3000, 10) var MAX_SPEED_DOWN: int = 1500
+export(int, -2000, 0, 10) var ACCEL_JUMP: int = -500
+# Horizontal movement properties
+export(int, 0, 50) var ACCEL_WALK: int = 20	# In 1 frame, how many pixels the player will accelerate horizontaly when walking
+export(float, 0, 1, 0.05) var ACCEL_WALK_FRICTION: float = 0.6	# In 1 frame, percentage of horizontal ground speed the player will keep after friction is applied
+export(float, 0, 1, 0.05) var ACCEL_AIR_FRICTION: float = 0.9	# In 1 frame, percentage of horizontal aerial speed the player will keep after friction is applied
+export(int, 0, 500, 10) var MAX_SPEED_WALK: int = 280
+# Wall sliding properties
+export(int, 0, 50) var ACCEL_WALL_SLIDE: int = 10
+export(int, 0, 500, 10) var MAX_SPEED_WALL_SLIDE: int = 150
 
 # CONSTS
-# Vertical movement properties
-const ACCEL_GRAVITY: int = 35	# In 1 frame, how many units of space the player will accelerate downwards
-const MAX_SPEED_UP: int = -1500
-const MAX_SPEED_DOWN: int = 1500
-const ACCEL_JUMP: int = -500
-# Horizontal movement properties
-const ACCEL_WALK: int = 20	# In 1 frame, how many units of space the player will accelerate horizontaly when walking
-const ACCEL_WALK_FRICTION: float = 0.6	# In 1 frame, percentage of horizontal ground speed the player will keep
-const ACCEL_AIR_FRICTION: float = 0.9	# In 1 frame, percentage of horizontal aerial speed the player will keep
-const MAX_SPEED_WALK: int = 280
-# Wall sliding properties
-const ACCEL_WALL_SLIDE: int = 10
-const MAX_SPEED_WALL_SLIDE: int = 150
 
 # ENUMS
 enum STATES {WALKING, FALLING, WALL_SLIDING}
