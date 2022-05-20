@@ -8,7 +8,6 @@ const dustCloudScene: PackedScene =  preload("res://player/dust-cloud/DustCloud.
 signal died
 
 # EXPORTS
-export(bool) var paused = false
 
 # CONSTS
 # Vertical movement properties
@@ -29,17 +28,21 @@ const MAX_SPEED_WALL_SLIDE: int = 150
 enum STATES {WALKING, FALLING, WALL_SLIDING}
 
 # VARS
-var velocity: Vector2 = Vector2()
-var previousState = null
-var state = STATES.FALLING setget setState
 onready var wallSlidingDetector: WallSlidingDetector = $WallSlidingDetector
-var canWallSlide: bool = true
-onready var jumpSFX: AudioStreamPlayer = $JumpSFX
+onready var hitbox: CollisionShape2D = $CollisionShape2D
 onready var sprite: AnimatedSprite = $AnimatedSprite
+onready var jumpSFX: AudioStreamPlayer = $JumpSFX
+onready var deathSFX: AudioStreamPlayer = $DeathSFX
+onready var animationPlayer: AnimationPlayer = $AnimationPlayer
 onready var dustCloudTimer: Timer = $DustCloudTimer
 onready var wallJumpFrictionTimer: Timer = $WallJumpFrictionTimer
+var velocity: Vector2 = Vector2()
+var canWallSlide: bool = true
+var paused: bool = false
+var previousState = null
+var state = STATES.FALLING setget _setState
 
-func setState(newState):
+func _setState(newState):
 	previousState = state
 	state = newState
 	print_debug("New state: ", newState)
@@ -178,8 +181,8 @@ func _changeState() -> void:
 func _dustCloudsProcess() -> void:
 	if STATES.WALL_SLIDING == state and not dustCloudTimer.time_left:
 		var dustCloud: DustCloud = dustCloudScene.instance()
-		var positionX: float = global_position.x + (($CollisionShape2D.shape.extents.x / 2) * wallSlidingDetector.getCollisionSide())
-		var positionY: float = global_position.y + ($CollisionShape2D.shape.extents.y / 2)
+		var positionX: float = global_position.x + ((hitbox.shape.extents.x / 2) * wallSlidingDetector.getCollisionSide())
+		var positionY: float = global_position.y + (hitbox.shape.extents.y / 2)
 		dustCloud.global_position = Vector2(positionX, positionY)
 		get_tree().current_scene.add_child(dustCloud)
 
@@ -226,9 +229,8 @@ func kill() -> void:
 
 	# Play death animation and SFX
 	# "died" signal is emitted when animation is over
-	var animation: AnimationPlayer = $AnimationPlayer
-	animation.play("Death")
-	$DeathSFX.play()
+	animationPlayer.play("Death")
+	deathSFX.play()
 
 func _on_AnimationPlayer_animation_finished(anim_name:String):
 	match anim_name:
