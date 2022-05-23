@@ -9,7 +9,7 @@ func setCorrect() -> void:
 	var correctStyle: StyleBoxFlat = load("res://UI/Button/Word/Button-Correct.tres")
 	var correctIcon: Texture = load("res://assets/Sprites/quiz/correct.png")
 	add_stylebox_override("disabled", correctStyle)
-	icon = correctIcon
+	$MarginContainer/TextureRect.texture = correctIcon
 	disabled = true
 
 func setWrong(wasChosen: bool) -> void:
@@ -25,4 +25,4 @@ func _setWrongStyle() -> void:
 
 func _setWrongIcon() -> void:
 	var wrongIcon: Texture = load("res://assets/Sprites/quiz/wrong.png")
-	icon = wrongIcon
+	$MarginContainer/TextureRect.texture = wrongIcon
