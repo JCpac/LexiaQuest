@@ -73,6 +73,11 @@ _global_script_classes=[ {
 "class": "WallSlidingDetector",
 "language": "GDScript",
 "path": "res://player/wall-sliding-detector/WallSlidingDetector.gd"
+}, {
+"base": "Reference",
+"class": "Word",
+"language": "GDScript",
+"path": "res://assets/Database/word.gd"
 } ]
 _global_script_class_icons={
 "Cherry": "",
@@ -87,7 +92,8 @@ _global_script_class_icons={
 "StartScreenUI": "",
 "StartSign": "",
 "TimerUI": "",
-"WallSlidingDetector": ""
+"WallSlidingDetector": "",
+"Word": ""
 }
 
 [application]
