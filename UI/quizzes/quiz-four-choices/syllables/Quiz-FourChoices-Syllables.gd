@@ -87,14 +87,21 @@ func _on_AnswerButton_pressed(target: Button) -> void:
 
 	if _validateAnswer(target.word):
 		numCorrectAnswersLeft -= 1
-		target.activateCorrectStyle()
+		target.setCorrect()
 		emit_signal("correct")
 		print_debug("Quiz 4 Choices Syllables: Answer '%s' was correct" % target.word.word)
 
 		if not numCorrectAnswersLeft:
+			_revealRemainingAnswers()
 			emit_signal("complete")
 			print_debug("Quiz 4 Choices Syllables: Quiz complete")
 	else:
-		target.activateWrongStyle()
+		target.setWrong(true)
 		emit_signal("wrong")
 		print_debug("Quiz 4 Choices Syllables: Answer '%s' was wrong" % target.word.word)
+
+# Reveals the unchosen wrong answers after quiz completion
+func _revealRemainingAnswers() -> void:
+	for buttonWord in answerGrid.get_children():
+		if not buttonWord.disabled and not buttonWord.word.syllables[0] == target:
+			buttonWord.setWrong(false)
