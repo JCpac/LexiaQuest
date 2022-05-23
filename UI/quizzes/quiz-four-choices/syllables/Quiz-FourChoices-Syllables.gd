@@ -87,6 +87,7 @@ func _on_AnswerButton_pressed(target: Button) -> void:
 
 	if _validateAnswer(target.word):
 		numCorrectAnswersLeft -= 1
+		target.activateCorrectStyle()
 		emit_signal("correct")
 		print_debug("Quiz 4 Choices Syllables: Answer '%s' was correct" % target.word.word)
 
@@ -94,5 +95,6 @@ func _on_AnswerButton_pressed(target: Button) -> void:
 			emit_signal("complete")
 			print_debug("Quiz 4 Choices Syllables: Quiz complete")
 	else:
+		target.activateWrongStyle()
 		emit_signal("wrong")
 		print_debug("Quiz 4 Choices Syllables: Answer '%s' was wrong" % target.word.word)
