@@ -153,4 +153,4 @@ one_shot = true
 [connection signal="playerReached" from="Signs/EndSign" to="." method="_on_EndSign_playerReached"]
 [connection signal="died" from="Player" to="." method="_on_Player_died"]
 [connection signal="timeout" from="CanvasLayer/TimerUI" to="." method="_on_TimerUI_timeout"]
-[connection signal="correct" from="CanvasLayer/Quiz-FourChoices-Syllables" to="." method="_on_Quiz_correct"]
+[connection signal="complete" from="CanvasLayer/Quiz-FourChoices-Syllables" to="." method="_on_Quiz_complete"]
