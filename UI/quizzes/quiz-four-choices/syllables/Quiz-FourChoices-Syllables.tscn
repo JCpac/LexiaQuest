@@ -1,13 +1,13 @@
 [gd_scene load_steps=3 format=2]
 
-[ext_resource path="res://UI/quizzes/quiz-four-choices/syllables/Quiz-FourChoices-Syllables.gd" type="Script" id=1]
-[ext_resource path="res://UI/quizzes/Quiz-Styles.tres" type="Theme" id=2]
+[ext_resource path="res://UI/quizzes/Quiz-Styles.tres" type="Theme" id=1]
+[ext_resource path="res://UI/quizzes/quiz-four-choices/syllables/Quiz-FourChoices-Syllables.gd" type="Script" id=2]
 
 [node name="Quiz-FourChoices-Syllables" type="PanelContainer"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-theme = ExtResource( 2 )
-script = ExtResource( 1 )
+theme = ExtResource( 1 )
+script = ExtResource( 2 )
 __meta__ = {
 "_edit_group_": true,
 "_edit_lock_": true,
@@ -52,15 +52,8 @@ fit_content_height = true
 scroll_active = false
 
 [node name="Answers" type="GridContainer" parent="QuizArea/VBoxContainer"]
-margin_top = 390.0
+margin_top = 414.0
 margin_right = 1180.0
-margin_bottom = 438.0
+margin_bottom = 414.0
 size_flags_vertical = 6
 columns = 2
-
-[node name="Answer1" type="Button" parent="QuizArea/VBoxContainer/Answers"]
-margin_right = 590.0
-margin_bottom = 48.0
-size_flags_horizontal = 3
-keep_pressed_outside = true
-text = "parque"

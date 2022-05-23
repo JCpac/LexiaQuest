@@ -2,63 +2,79 @@ extends PanelContainer
 
 
 # PRELOADS & CONSTS
+const buttonWordScene: PackedScene = preload("res://UI/Button/Word/Button-Word.tscn")
 
 # SIGNALS
 signal correct
 signal wrong
+signal complete
 
 # EXPORTS
-export(String) var debugTarget = "ball"
-export(Array, String) var debugExtraAnswers: Array = ["bull", "beach", "bail"]
+export(int) var minNumColumns = 1
+export(int) var maxNumColumns = 4
+export(String) var debugTarget = "fa"
+export(Array) var debugAnswers: Array = [
+	Word.new(["fa", "mi", "ly"], "family"),
+	Word.new(["fa", "vo", "rite"], "favorite"),
+	Word.new(["fa", "ther"], "father"),
+	Word.new(["lan", "guage"], "language"),
+	Word.new(["fea", "ther"], "feather"),
+	Word.new(["foot", "ball"], "football")
+]
 
 # VARS
 onready var targetLabel: RichTextLabel = $QuizArea/VBoxContainer/Exercise/Target
 onready var answerGrid: GridContainer = $QuizArea/VBoxContainer/Answers
-onready var placeholderAnswerButton: Button = $QuizArea/VBoxContainer/Answers/Answer1
 var target: String
+var numCorrectAnswersLeft: int
 var rng: RandomNumberGenerator
 
-func _ready():
+func _init():
 	rng = RandomNumberGenerator.new()
 	rng.randomize()
+
+func _ready():
+	# If the quiz scene itself is played, automatically use debug values
 	if OS.is_debug_build() and get_parent() == get_tree().root:
-		prepareQuiz(debugTarget)
+		prepareQuiz(debugTarget, debugAnswers)
 
-func prepareQuiz(targetWord: String) -> void:
-	self.target = targetWord
+# Assigns the quiz with a target syllable and several possible answers
+# Generates the quiz UI based on the provided values
+# Assumes that at least 1 of the provided answers is correct
+# Expects the elements of `answersArray` to be of type `Word`
+func prepareQuiz(targetSyllable: String, answersArray: Array) -> void:
+	answersArray.shuffle()
 
-	# Generate answer buttons and place them on the tree, while also removing the placeholder button
-	var buttonsArray: Array = _generateAnswerButtons(targetWord)
-	answerGrid.remove_child(placeholderAnswerButton)
-	placeholderAnswerButton.queue_free()
+	self.target = targetSyllable
+	self.numCorrectAnswersLeft = _countCorrectAnswers(targetSyllable, answersArray)
+
+	# Clear answer grid
+	# (this quiz scene is instanced once per level and reused for each activity)
+	for gridChild in answerGrid.get_children():
+		gridChild.free()
+
+	# Generate answer buttons and place them on the tree
+	var buttonsArray: Array = _generateAnswerButtons(answersArray)
 	for node in buttonsArray:
 		answerGrid.add_child(node)
 
-func _generateAnswerButtons(targetWord: String) -> Array:
-	var answerStrings: Array = []	# Holds the possible answers
-	var answerButtons: Array = []	# Holds the buttons with the possible answers
+# Count how many of the provided answers match the provided target syllable
+func _countCorrectAnswers(targetSyllable: String, answersArray: Array) -> int:
+	var count: int = 0
+	for answer in answersArray:
+		if targetSyllable == (answer as Word).syllables[0]:
+			count += 1
+	return count
 
-	# Add target word to possible answers
-	answerStrings.append(targetWord)
+# Instance `Button-Word` scenes and assign them the provided `Word` instances
+func _generateAnswerButtons(answersArray: Array) -> Array:
+	var answerButtons: Array = []
 
-	# Randomize and add extra answers
-	var numOfExtraStrings = 3
-	if OS.is_debug_build():
-		answerStrings.append_array(debugExtraAnswers)
-	else:
-		while numOfExtraStrings:
-			# TODO: DO SOMETHING HERE AFTER MAKING WORD DB
-			# answerChars.append(char(randomASCII))
-			# numOfExtraChars -= 1
-			pass
-
-	# Shuffle answer strings array and create buttons
-	answerStrings.shuffle()
-	for i in answerStrings:
-		# Generate duplicate buttons and assign them values
-		var newButton: Button = placeholderAnswerButton.duplicate()
-		newButton.text = i
-		newButton.connect("pressed", self, "_on_AnswerButton_pressed", [i])
+	for answer in answersArray:
+		var newButton: Button = buttonWordScene.instance()
+		newButton.word = answer
+		newButton.text = newButton.word.word
+		newButton.connect("pressed", self, "_on_AnswerButton_pressed")
 		answerButtons.append(newButton)
 
 	return answerButtons
