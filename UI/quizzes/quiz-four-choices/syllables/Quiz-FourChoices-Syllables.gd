@@ -25,7 +25,6 @@ export(Array) var debugAnswers: Array = [
 # VARS
 onready var targetLabel: RichTextLabel = $QuizArea/VBoxContainer/Exercise/Target
 onready var answerGrid: GridContainer = $QuizArea/VBoxContainer/Answers
-var target: String
 var numCorrectAnswersLeft: int
 
 func _init():
@@ -43,7 +42,7 @@ func _ready():
 func prepareQuiz(targetSyllable: String, answersArray: Array) -> void:
 	answersArray.shuffle()
 
-	self.target = targetSyllable
+	targetLabel.bbcode_text = "[center][b]%s[/b][/center]" % targetSyllable
 	self.numCorrectAnswersLeft = _countCorrectAnswers(targetSyllable, answersArray)
 
 	# Clear answer grid
@@ -56,7 +55,7 @@ func prepareQuiz(targetSyllable: String, answersArray: Array) -> void:
 	for node in buttonsArray:
 		answerGrid.add_child(node)
 
-	print_debug("Quiz 4 Choices Syllables: Quiz prepared with target syllable '%s'" % target)
+	print_debug("Quiz 4 Choices Syllables: Quiz prepared with target syllable '%s'" % targetLabel.text)
 
 # Count how many of the provided answers match the provided target syllable
 func _countCorrectAnswers(targetSyllable: String, answersArray: Array) -> int:
@@ -80,7 +79,7 @@ func _generateAnswerButtons(answersArray: Array) -> Array:
 	return answerButtons
 
 func _validateAnswer(answer: Word) -> bool:
-	return answer.syllables[0] == target
+	return answer.syllables[0] == targetLabel.text
 
 func _on_AnswerButton_pressed(target: Button) -> void:
 	target.disabled = true
@@ -103,5 +102,5 @@ func _on_AnswerButton_pressed(target: Button) -> void:
 # Reveals the unchosen wrong answers after quiz completion
 func _revealRemainingAnswers() -> void:
 	for buttonWord in answerGrid.get_children():
-		if not buttonWord.disabled and not buttonWord.word.syllables[0] == target:
+		if not buttonWord.disabled and not buttonWord.word.syllables[0] == targetLabel.text:
 			buttonWord.setWrong(false)
