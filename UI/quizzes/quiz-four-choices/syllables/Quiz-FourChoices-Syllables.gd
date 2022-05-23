@@ -74,7 +74,7 @@ func _generateAnswerButtons(answersArray: Array) -> Array:
 		var newButton: Button = buttonWordScene.instance()
 		newButton.word = answer
 		newButton.text = newButton.word.word
-		newButton.connect("pressed", self, "_on_AnswerButton_pressed", [newButton.word])
+		newButton.connect("pressed", self, "_on_AnswerButton_pressed", [newButton])
 		answerButtons.append(newButton)
 
 	return answerButtons
@@ -82,15 +82,17 @@ func _generateAnswerButtons(answersArray: Array) -> Array:
 func _validateAnswer(answer: Word) -> bool:
 	return answer.syllables[0] == target
 
-func _on_AnswerButton_pressed(value: Word) -> void:
-	if _validateAnswer(value):
+func _on_AnswerButton_pressed(target: Button) -> void:
+	target.disabled = true
+
+	if _validateAnswer(target.word):
 		numCorrectAnswersLeft -= 1
 		emit_signal("correct")
-		print_debug("Quiz 4 Choices Syllables: Answer '%s' was correct" % value.word)
+		print_debug("Quiz 4 Choices Syllables: Answer '%s' was correct" % target.word.word)
 
 		if not numCorrectAnswersLeft:
 			emit_signal("complete")
 			print_debug("Quiz 4 Choices Syllables: Quiz complete")
 	else:
 		emit_signal("wrong")
-		print_debug("Quiz 4 Choices Syllables: Answer '%s' was wrong" % value.word)
+		print_debug("Quiz 4 Choices Syllables: Answer '%s' was wrong" % target.word.word)
