@@ -27,11 +27,9 @@ onready var targetLabel: RichTextLabel = $QuizArea/VBoxContainer/Exercise/Target
 onready var answerGrid: GridContainer = $QuizArea/VBoxContainer/Answers
 var target: String
 var numCorrectAnswersLeft: int
-var rng: RandomNumberGenerator
 
 func _init():
-	rng = RandomNumberGenerator.new()
-	rng.randomize()
+	randomize()
 
 func _ready():
 	# If the quiz scene itself is played, automatically use debug values
