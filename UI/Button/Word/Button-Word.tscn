@@ -7,7 +7,6 @@ margin_right = 590.0
 margin_bottom = 48.0
 size_flags_horizontal = 3
 keep_pressed_outside = true
-text = "parque"
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
