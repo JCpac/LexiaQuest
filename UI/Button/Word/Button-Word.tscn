@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://UI/Button/Word/Button-Word.gd" type="Script" id=1]
+
+[node name="Button-Word" type="Button"]
+margin_right = 590.0
+margin_bottom = 48.0
+size_flags_horizontal = 3
+keep_pressed_outside = true
+text = "parque"
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
