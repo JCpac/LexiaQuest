@@ -25,7 +25,7 @@ extra_spacing_char = 2
 font_data = ExtResource( 3 )
 
 [sub_resource type="StyleBoxFlat" id=3]
-bg_color = Color( 0, 0, 0, 0.137255 )
+bg_color = Color( 0, 0, 0, 0.392157 )
 
 [sub_resource type="StyleBoxEmpty" id=4]
 
