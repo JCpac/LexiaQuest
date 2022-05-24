@@ -34,7 +34,7 @@ var paused: bool = false
 var currentLevelBounds: Dictionary
 
 # METHODS
-func _init():
+func _enter_tree():
 	currentLevelBounds = {
 		"top": levelBounds.top,
 		"right": levelBounds.right,
