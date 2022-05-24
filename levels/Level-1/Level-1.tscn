@@ -23,7 +23,7 @@ __meta__ = {
 "_edit_lock_": true
 }
 levelBounds = {
-"bottom": 1216,
+"bottom": 1024,
 "left": -384,
 "right": 4032,
 "top": -440
