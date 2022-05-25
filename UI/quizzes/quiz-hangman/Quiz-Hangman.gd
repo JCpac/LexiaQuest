@@ -21,6 +21,7 @@ onready var targetImage: TextureRect = $QuizArea/HBoxContainer/LeftSide/Image/Te
 onready var targetLabel: Label = $QuizArea/HBoxContainer/RightSide/VBoxContainer/Target
 onready var answerGrid: GridContainer = $QuizArea/HBoxContainer/RightSide/VBoxContainer/Answers
 var target: String
+var missingLetters: Array = []
 var rng: RandomNumberGenerator
 
 # METHODS
@@ -68,6 +69,9 @@ func prepareQuiz(targetWord: String, numOfHintChars: int, numOfAnswerButtons: in
 		if not targetLabel.text[i] == '_':
 			hintCharIndexes.append(i)
 
+	# Get missing letters
+	self.missingLetters = _getMissingLetters(targetWord, hintCharIndexes)
+
 	# Clear answer grid
 	# (this quiz scene is instanced once per level and reused for each activity)
 	for gridChild in answerGrid.get_children():
@@ -102,6 +106,15 @@ func _generateTargetWithHintLetters(targetWord: String, numOfHintChars: int) -> 
 
 	return shownTargetWord
 
+# Creates an array with the unique letters that were *not* revealed in the target label
+func _getMissingLetters(targetWord: String, hintCharIndexes: Array) -> Array:
+	var missingLettersArray: Array = []
+	for i in range(targetWord.length()):
+		if not i in hintCharIndexes and not targetWord[i] in missingLetters:
+			missingLettersArray.append(targetWord[i])
+
+	return missingLettersArray
+
 func _generateAnswerButtons(targetWord: String, numOfAnswerButtons: int, hintCharIndexes: Array) -> Array:
 	var answerChars: Array = []	# Holds the possible answers
 	var answerButtons: Array = []	# Holds the buttons with the possible answers
@@ -131,9 +144,6 @@ func _generateAnswerButtons(targetWord: String, numOfAnswerButtons: int, hintCha
 
 	return answerButtons
 
-func _validateTargetIsComplete() -> bool:
-	return self.target == targetLabel.text
-
 func _on_AnswerButton_pressed(target: Button) -> void:
 	var letterMatchIndex: int = _validateAnswer(target.text)
 	if not letterMatchIndex == -1:
@@ -161,11 +171,14 @@ func _validateAnswer(answer: String) -> int:
 
 	return -1
 
+func _validateTargetIsComplete() -> bool:
+	return self.target == targetLabel.text
+
 # Reveals the unchosen answers after quiz completion
 func _revealRemainingAnswers() -> void:
 	for buttonLetter in answerGrid.get_children():
 		if not buttonLetter.disabled:
-			if buttonLetter.text in self.target:
+			if buttonLetter.text in missingLetters:
 				buttonLetter.setPossible()
 			else:
 				buttonLetter.setWrong(false)
