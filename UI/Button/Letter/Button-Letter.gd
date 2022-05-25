@@ -2,7 +2,6 @@ extends Button
 
 
 # VARS
-var word: Word
 
 # METHODS
 func setCorrect() -> void:
@@ -10,6 +9,11 @@ func setCorrect() -> void:
 	var correctIcon: Texture = load("res://assets/Sprites/quiz/correct.png")
 	add_stylebox_override("disabled", correctStyle)
 	$MarginContainer/TextureRect.texture = correctIcon
+	disabled = true
+
+func setPossible() -> void:
+	var possibleIcon: Texture = load("res://assets/Sprites/quiz/possible.png")
+	$MarginContainer/TextureRect.texture = possibleIcon
 	disabled = true
 
 func setWrong(wasChosen: bool) -> void:

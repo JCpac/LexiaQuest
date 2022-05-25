@@ -2,8 +2,7 @@ extends PanelContainer
 
 
 # PRELOADS & CONSTS
-const MIN_NUM_ANSWERS = 2
-const MAX_NUM_ANSWERS = 10
+const buttonLetterScene: PackedScene = preload("res://UI/Button/Letter/Button-Letter.tscn")
 
 # SIGNALS
 signal correct
@@ -21,16 +20,26 @@ export(int, 2, 10) var debugNumAnswers = 6
 onready var targetImage: TextureRect = $QuizArea/HBoxContainer/LeftSide/Image/TextureRect
 onready var targetLabel: Label = $QuizArea/HBoxContainer/RightSide/VBoxContainer/Target
 onready var answerGrid: GridContainer = $QuizArea/HBoxContainer/RightSide/VBoxContainer/Answers
-onready var answerButton: Button = $QuizArea/HBoxContainer/RightSide/VBoxContainer/Answers/Answer1
 var target: String
 var rng: RandomNumberGenerator
+
+# METHODS
+func _init():
+	randomize()
 
 func _ready():
 	rng = RandomNumberGenerator.new()
 	rng.randomize()
+
+	# If the quiz scene itself is played, automatically use debug values
 	if OS.is_debug_build() and get_parent() == get_tree().root:
 		prepareQuiz(debugTarget, debugHintChars, debugNumAnswers)
 
+# Assigns the quiz with a target word and several possible answer letters to complete the word
+# Generates the quiz UI based on the provided values
+# Assumes that all correct letters are provided
+# `numOfHintChars` is, at most, half the length of the target word
+# `numOfAnswerButtons` is restricted to even numbers and between [target word's length + 2] and [target word's length x 2]
 func prepareQuiz(targetWord: String, numOfHintChars: int, numOfAnswerButtons: int) -> void:
 	self.target = targetWord
 
@@ -45,13 +54,13 @@ func prepareQuiz(targetWord: String, numOfHintChars: int, numOfAnswerButtons: in
 		numOfHintChars = targetHalfLength
 	targetLabel.text = _generateTargetWithHintLetters(targetWord, numOfHintChars)
 
-	# Restrict `numOfAnswerButtons` to their assigned range and to even numbers
+	# Restrict `numOfAnswerButtons` to its assigned range and to even numbers
 	if numOfAnswerButtons & 1:
 		numOfAnswerButtons += 1
-	if numOfAnswerButtons < MIN_NUM_ANSWERS:
-		numOfAnswerButtons = MIN_NUM_ANSWERS
-	elif numOfAnswerButtons > MAX_NUM_ANSWERS:
-		numOfAnswerButtons = MAX_NUM_ANSWERS
+	if numOfAnswerButtons < targetWord.length() + 2:
+		numOfAnswerButtons = targetWord.length() + 2
+	elif numOfAnswerButtons > targetWord.length() << 1:
+		numOfAnswerButtons = targetWord.length() << 1
 
 	# Get hint character indexes
 	var hintCharIndexes: Array = []
@@ -59,10 +68,13 @@ func prepareQuiz(targetWord: String, numOfHintChars: int, numOfAnswerButtons: in
 		if not targetLabel.text[i] == '_':
 			hintCharIndexes.append(i)
 
-	# Generate answer buttons and place them on the tree, while also removing the placeholder button
+	# Clear answer grid
+	# (this quiz scene is instanced once per level and reused for each activity)
+	for gridChild in answerGrid.get_children():
+		gridChild.free()
+
+	# Generate answer buttons and place them on the tree
 	var buttonsArray: Array = _generateAnswerButtons(targetWord, numOfAnswerButtons, hintCharIndexes)
-	answerGrid.remove_child(answerButton)
-	answerButton.queue_free()
 	for node in buttonsArray:
 		answerGrid.add_child(node)
 
@@ -112,29 +124,48 @@ func _generateAnswerButtons(targetWord: String, numOfAnswerButtons: int, hintCha
 	answerChars.shuffle()
 	for i in answerChars:
 		# Generate duplicate buttons and assign them values
-		var newButton: Button = answerButton.duplicate()
+		var newButton: Button = buttonLetterScene.instance()
 		newButton.text = i
-		newButton.connect("pressed", self, "_on_AnswerButton_pressed", [i])
+		newButton.connect("pressed", self, "_on_AnswerButton_pressed", [newButton])
 		answerButtons.append(newButton)
 
 	return answerButtons
 
 func _validateTargetIsComplete() -> bool:
-	return self.target.similarity(targetLabel.text) == 1
+	return self.target == targetLabel.text
 
-func _on_AnswerButton_pressed(value: String) -> void:
-	# Check if chosen character exists in target word and is hidden in target word's label
-	for i in range(self.target.length()):
-		if value == self.target[i] and targetLabel.text[i] == "_":
-			# Reveal character
-			targetLabel.text[i] = value
-			emit_signal("correct")
-			print_debug("Quiz Hangman: Letter '%s' was correct" % value)
-			if _validateTargetIsComplete():
-				emit_signal("completed")
-				print_debug("Quiz Hangman: Target '%s' completed" % self.target)
-			return
+func _on_AnswerButton_pressed(target: Button) -> void:
+	var letterMatchIndex: int = _validateAnswer(target.text)
+	if not letterMatchIndex == -1:
+		targetLabel.text[letterMatchIndex] = target.text	# Reveal character in target word's label
+		target.setCorrect()
+		emit_signal("correct")
+		print_debug("Quiz Hangman: Letter '%s' was correct" % target.text)
 
-	# Character does not exist in target or all of its occurrences were already revealed before
+		if _validateTargetIsComplete():
+			_revealRemainingAnswers()
+			emit_signal("completed")
+			print_debug("Quiz Hangman: Target '%s' completed" % self.target)
+		return
+
+	target.setWrong(true)
 	emit_signal("wrong")
-	print_debug("Quiz Hangman: Letter '%s' was wrong" % value)
+	print_debug("Quiz Hangman: Letter '%s' was wrong" % target.text)
+
+# Check if chosen character exists in the target word and is hidden in the target word's label
+# Return the index of the matching letter or `-1` if none match
+func _validateAnswer(answer: String) -> int:
+	for i in range(self.target.length()):
+		if answer == self.target[i] and targetLabel.text[i] == "_":
+			return i
+
+	return -1
+
+# Reveals the unchosen answers after quiz completion
+func _revealRemainingAnswers() -> void:
+	for buttonLetter in answerGrid.get_children():
+		if not buttonLetter.disabled:
+			if buttonLetter.text in self.target:
+				buttonLetter.setPossible()
+			else:
+				buttonLetter.setWrong(false)
