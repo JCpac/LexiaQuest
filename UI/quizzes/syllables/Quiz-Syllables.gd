@@ -55,7 +55,7 @@ func prepareQuiz(targetSyllable: String, answersArray: Array) -> void:
 	for node in buttonsArray:
 		answerGrid.add_child(node)
 
-	print_debug("Quiz 4 Choices Syllables: Quiz prepared with target syllable '%s'" % targetLabel.text)
+	print_debug("Quiz Syllables: Quiz prepared with target syllable '%s'" % targetLabel.text)
 
 # Count how many of the provided answers match the provided target syllable
 func _countCorrectAnswers(targetSyllable: String, answersArray: Array) -> int:
@@ -88,16 +88,16 @@ func _on_AnswerButton_pressed(target: Button) -> void:
 		numCorrectAnswersLeft -= 1
 		target.setCorrect()
 		emit_signal("correct")
-		print_debug("Quiz 4 Choices Syllables: Answer '%s' was correct" % target.word.word)
+		print_debug("Quiz Syllables: Answer '%s' was correct" % target.word.word)
 
 		if not numCorrectAnswersLeft:
 			_revealRemainingAnswers()
 			emit_signal("completed")
-			print_debug("Quiz 4 Choices Syllables: Quiz complete")
+			print_debug("Quiz Syllables: Quiz complete")
 	else:
 		target.setWrong(true)
 		emit_signal("wrong")
-		print_debug("Quiz 4 Choices Syllables: Answer '%s' was wrong" % target.word.word)
+		print_debug("Quiz Syllables: Answer '%s' was wrong" % target.word.word)
 
 # Reveals the unchosen wrong answers after quiz completion
 func _revealRemainingAnswers() -> void:

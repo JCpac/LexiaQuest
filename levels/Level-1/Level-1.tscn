@@ -8,7 +8,7 @@
 [ext_resource path="res://UI/level-score/ScoreUI.tscn" type="PackedScene" id=6]
 [ext_resource path="res://levels/Level_1/Signs/StartSign/StartSign.tscn" type="PackedScene" id=7]
 [ext_resource path="res://levels/Level_1/Signs/EndSign/EndSign.tscn" type="PackedScene" id=8]
-[ext_resource path="res://UI/quizzes/quiz-four-choices/syllables/Quiz-FourChoices-Syllables.tscn" type="PackedScene" id=9]
+[ext_resource path="res://UI/quizzes/syllables/Quiz-Syllables.tscn" type="PackedScene" id=9]
 [ext_resource path="res://assets/TileSets/Presents.tres" type="TileSet" id=13]
 [ext_resource path="res://player/Player.tscn" type="PackedScene" id=15]
 [ext_resource path="res://assets/Sound/8bit 8pack/Level 2.wav" type="AudioStream" id=16]
