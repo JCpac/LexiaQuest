@@ -55,7 +55,7 @@ func prepareQuiz(targetSyllable: String, answersArray: Array) -> void:
 	for node in buttonsArray:
 		answerGrid.add_child(node)
 
-	print_debug("Quiz Syllables: Quiz prepared with target syllable '%s'" % targetLabel.text)
+	print_debug("Quiz Syllables: Quiz prepared with target syllable '%s'" % targetSyllable)
 
 # Count how many of the provided answers match the provided target syllable
 func _countCorrectAnswers(targetSyllable: String, answersArray: Array) -> int:
@@ -82,8 +82,6 @@ func _validateAnswer(answer: Word) -> bool:
 	return answer.syllables[0] == targetLabel.text
 
 func _on_AnswerButton_pressed(target: Button) -> void:
-	target.disabled = true
-
 	if _validateAnswer(target.word):
 		numCorrectAnswersLeft -= 1
 		target.setCorrect()
