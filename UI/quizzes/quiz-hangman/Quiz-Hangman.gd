@@ -90,6 +90,8 @@ func prepareQuiz(targetWord: String, numOfHintChars: int, numOfAnswerButtons: in
 		newNumOfColumns = maxNumColumns
 	answerGrid.columns = newNumOfColumns
 
+	print_debug("Quiz Hangman: Quiz prepared with target word '%s' and revealed label '%s'" % [targetWord, targetLabel.text])
+
 func _generateTargetWithHintLetters(targetWord: String, numOfHintChars: int) -> String:
 	var shownTargetWord: String = "_".repeat(targetWord.length())
 	var chosenHintCharsIndexes: Array = []
