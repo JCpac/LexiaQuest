@@ -15,7 +15,7 @@ func onPresentCollected() -> void:
 	quiz.visible = true
 	player.paused = true
 
-func _on_Quiz_complete():
+func _on_Quiz_completed():
 	# Wait 2 seconds, add 1 to score and continue the game
 	quizCompleteTimer.start()
 	yield(quizCompleteTimer, "timeout")

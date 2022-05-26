@@ -7,7 +7,7 @@ const buttonWordScene: PackedScene = preload("res://UI/Button/Word/Button-Word.t
 # SIGNALS
 signal correct
 signal wrong
-signal complete
+signal completed
 
 # EXPORTS
 export(int) var minNumColumns = 1
@@ -92,7 +92,7 @@ func _on_AnswerButton_pressed(target: Button) -> void:
 
 		if not numCorrectAnswersLeft:
 			_revealRemainingAnswers()
-			emit_signal("complete")
+			emit_signal("completed")
 			print_debug("Quiz 4 Choices Syllables: Quiz complete")
 	else:
 		target.setWrong(true)
