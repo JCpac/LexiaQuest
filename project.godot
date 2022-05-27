@@ -102,6 +102,10 @@ config/name="Dyslexia Platformer Project"
 run/main_scene="res://levels/StartScreen/StartScreen.tscn"
 config/icon="res://icon.png"
 
+[autoload]
+
+JsonLoader="*res://db/JsonLoader.gd"
+
 [display]
 
 window/size/width=1280
