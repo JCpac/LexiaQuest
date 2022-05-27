@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=16 format=2]
 
 [ext_resource path="res://assets/TileSets/Foreground.tres" type="TileSet" id=1]
 [ext_resource path="res://UI/level-timer/TimerUI.tscn" type="PackedScene" id=2]
@@ -9,6 +9,7 @@
 [ext_resource path="res://levels/Level_1/Signs/StartSign/StartSign.tscn" type="PackedScene" id=7]
 [ext_resource path="res://levels/Level_1/Signs/EndSign/EndSign.tscn" type="PackedScene" id=8]
 [ext_resource path="res://UI/quizzes/quiz-four-choices/Quiz-FourChoices.tscn" type="PackedScene" id=9]
+[ext_resource path="res://quizzes/QuizGenerator.gd" type="Script" id=10]
 [ext_resource path="res://assets/TileSets/Presents.tres" type="TileSet" id=13]
 [ext_resource path="res://player/Player.tscn" type="PackedScene" id=15]
 [ext_resource path="res://assets/Sound/8bit 8pack/Level 2.wav" type="AudioStream" id=16]
@@ -147,6 +148,9 @@ visible = false
 [node name="QuizCompleteTimer" type="Timer" parent="."]
 wait_time = 2.0
 one_shot = true
+
+[node name="QuizGenerator" type="Node" parent="."]
+script = ExtResource( 10 )
 
 [connection signal="body_exited" from="Entrance" to="." method="_on_Entrance_body_exited"]
 [connection signal="playerHasCrossed" from="Signs/StartSign" to="." method="_on_StartSign_playerHasCrossed"]
