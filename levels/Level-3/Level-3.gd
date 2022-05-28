@@ -11,7 +11,8 @@ onready var quizGenerator = $QuizGenerator
 
 # METHODS
 func _ready():
-	quizGenerator.generateRhymesQuizSet(3, 3)
+	#quizGenerator.generateRhymesQuizSet(3, 3)
+	quizGenerator.generateHangmanQuizSet(0.15)
 
 func onPresentCollected() -> void:
 	# Open quiz
