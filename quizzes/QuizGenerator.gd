@@ -15,7 +15,9 @@ func _init():
 
 # Generate a random set of "Match Image" quizzes
 # Each quiz can be retrieved by calling `getNextQuiz()`
-# These quizzes are `Dictionaries` with the properties `target` (`String`) and `extraAnswers` (`Array` of `Strings`)
+# These quizzes are `Dictionaries` with the properties:
+# - `target` (`String`)
+# - `extraAnswers` (`Array` of `Strings`)
 func generateMatchImageQuizSet() -> void:
 	self.quizSet.clear()
 
@@ -37,8 +39,10 @@ func generateMatchImageQuizSet() -> void:
 
 # Generate a random set of "Starts With" quizzes
 # Each quiz can be retrieved by calling `getNextQuiz()`
-# These quizzes are `Dictionaries` with the properties `target` (`String`) and `answers` (`Array` of `Strings`)
-# Each quiz has a total of `numOfCorrectAnswersPerQuiz + numOfWrongAnswersPerQuiz` answers
+# These quizzes are `Dictionaries` with the properties:
+# - `target` (`String`)
+# - `answers` (`Array` of `Strings`)
+# Each quiz generates with a total of `numOfCorrectAnswersPerQuiz + numOfWrongAnswersPerQuiz` answers
 func generateStartsWithQuizSet(numOfCorrectAnswersPerQuiz: int, numOfWrongAnswersPerQuiz: int) -> void:
 	self.quizSet.clear()
 
@@ -65,8 +69,10 @@ func generateStartsWithQuizSet(numOfCorrectAnswersPerQuiz: int, numOfWrongAnswer
 
 # Generate a random set of "Rhymes" quizzes
 # Each quiz can be retrieved by calling `getNextQuiz()`
-# These quizzes are `Dictionaries` with the properties `target` (`String`) and `answers` (`Array` of `Strings`)
-# Each quiz has a total of `numOfCorrectAnswersPerQuiz + numOfWrongAnswersPerQuiz` answers
+# These quizzes are `Dictionaries` with the properties:
+# - `target` (`String`)
+# - `answers` (`Array` of `Strings`)
+# Each quiz generates with a total of `numOfCorrectAnswersPerQuiz + numOfWrongAnswersPerQuiz` answers
 func generateRhymesQuizSet(numOfCorrectAnswersPerQuiz: int, numOfWrongAnswersPerQuiz: int) -> void:
 	self.quizSet.clear()
 
@@ -191,7 +197,7 @@ func _getExtraWords(numOfExtraWords: int, excludedWords: Array) -> Array:
 	return extraAnswers
 
 # Gets the next quiz in the last generated set of quizzes
-# Quiz sets can be generated with `generateMatchImageQuizSet()` and `generateStartsWithQuizSet()`
+# Quiz sets can be generated with `generateMatchImageQuizSet()`, `generateStartsWithQuizSet()` and `generateHangmanQuizSet()`
 # Returns an empty `Dictionary` if no quizzes have been generated or the last set of quizzes has been exhausted
 func getNextQuiz() -> Dictionary:
 	if not len(quizSet):
