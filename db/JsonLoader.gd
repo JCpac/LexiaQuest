@@ -6,6 +6,8 @@ const DB_PATH = "res://assets/Database/"
 const MATCH_IMAGE_DB = "match-image.json"
 const STARTS_WITH_DB = "start-syllable.json"
 const RHYMES_DB = "rhymes.json"
+const STARTS_WITH_SYLLABLE_PROP = "start"
+const STARTS_WITH_WORDS_PROP = "words"
 
 # VARS
 var allWords: Array = []	# `Array` of `Strings` with all unique words in the DB files

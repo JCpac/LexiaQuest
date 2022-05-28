@@ -7,8 +7,12 @@ extends Level
 
 # VARS
 onready var quiz = $"CanvasLayer/Quiz-FourChoices-Syllables"
+onready var quizGenerator = $QuizGenerator
 
 # METHODS
+func _ready():
+	quizGenerator.generateStartsWithQuizSet(3, 3)
+
 func onPresentCollected() -> void:
 	# Open Syllables quiz
 	quiz.prepareQuiz(quiz.debugTarget, quiz.debugAnswers)
