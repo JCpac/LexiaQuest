@@ -11,7 +11,7 @@ func _init():
 	rng.randomize()
 
 # Generate a random set of "Match Image" quizzes
-# Each quiz can be retrieved be calling `getNextQuiz()`
+# Each quiz can be retrieved by calling `getNextQuiz()`
 # These quizzes are `Dictionaries` with the properties `target` (`String`) and `extraAnswers` (`Array` of `Strings`)
 func generateMatchImageQuizSet() -> void:
 	self.quizSet.clear()
@@ -21,7 +21,7 @@ func generateMatchImageQuizSet() -> void:
 		var quizDictionary: Dictionary = {}
 		var tempWordSet: Array = wordSet.duplicate()
 
-		# Set first word as target
+		# Set first word as target and remove it from the array
 		quizDictionary.target = tempWordSet.pop_front()
 		quizDictionary.extraAnswers = []
 
@@ -33,7 +33,7 @@ func generateMatchImageQuizSet() -> void:
 		self.quizSet.append(quizDictionary)
 
 # Generate a random set of "Starts With" quizzes
-# Each quiz can be retrieved be calling `getNextQuiz()`
+# Each quiz can be retrieved by calling `getNextQuiz()`
 # These quizzes are `Dictionaries` with the properties `target` (`String`) and `answers` (`Array` of `Strings`)
 # Each quiz has a total of `numOfCorrectAnswersPerQuiz + numOfWrongAnswersPerQuiz` answers
 func generateStartsWithQuizSet(numOfCorrectAnswersPerQuiz: int, numOfWrongAnswersPerQuiz: int) -> void:
@@ -51,6 +51,34 @@ func generateStartsWithQuizSet(numOfCorrectAnswersPerQuiz: int, numOfWrongAnswer
 		# Pick random correct answers
 		var smallestNumOfCorrectAnswers: int = len(correctAnswers) if len(correctAnswers) < numOfCorrectAnswersPerQuiz else numOfCorrectAnswersPerQuiz
 		correctAnswers.shuffle()
+		for i in range(smallestNumOfCorrectAnswers):
+			quizDictionary.answers.append(correctAnswers[i])
+
+		# Pick random wrong answers
+		quizDictionary.answers.append_array(_getExtraWords(numOfWrongAnswersPerQuiz, correctAnswers))
+
+		quizDictionary.answers.shuffle()
+		self.quizSet.append(quizDictionary)
+
+# Generate a random set of "Rhymes" quizzes
+# Each quiz can be retrieved by calling `getNextQuiz()`
+# These quizzes are `Dictionaries` with the properties `target` (`String`) and `answers` (`Array` of `Strings`)
+# Each quiz has a total of `numOfCorrectAnswersPerQuiz + numOfWrongAnswersPerQuiz` answers
+func generateRhymesQuizSet(numOfCorrectAnswersPerQuiz: int, numOfWrongAnswersPerQuiz: int) -> void:
+	self.quizSet.clear()
+
+	JsonLoader.rhymesWords.shuffle()
+	for wordSet in JsonLoader.rhymesWords:
+		var quizDictionary: Dictionary = {}
+		var correctAnswers: Array = wordSet.duplicate()
+
+		# Set random correct word as target and remove it from the array
+		correctAnswers.shuffle()
+		quizDictionary.target = correctAnswers.pop_front()
+		quizDictionary.answers = []
+
+		# Pick random correct answers
+		var smallestNumOfCorrectAnswers: int = len(correctAnswers) if len(correctAnswers) < numOfCorrectAnswersPerQuiz else numOfCorrectAnswersPerQuiz
 		for i in range(smallestNumOfCorrectAnswers):
 			quizDictionary.answers.append(correctAnswers[i])
 
@@ -80,5 +108,5 @@ func _getExtraWords(numOfExtraWords: int, excludedWords: Array) -> Array:
 func getNextQuiz() -> Dictionary:
 	if not len(quizSet):
 		return {}
-	
+
 	return quizSet.pop_front()

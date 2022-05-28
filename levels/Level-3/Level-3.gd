@@ -7,8 +7,12 @@ extends Level
 
 # VARS
 onready var quiz = $"CanvasLayer/Quiz-Hangman"
+onready var quizGenerator = $QuizGenerator
 
 # METHODS
+func _ready():
+	quizGenerator.generateRhymesQuizSet(3, 3)
+
 func onPresentCollected() -> void:
 	# Open quiz
 	quiz.prepareQuiz(quiz.debugTarget, quiz.debugHintChars, quiz.debugNumAnswers)
