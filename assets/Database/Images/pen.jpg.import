@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/bull.jpg-7dcf6ee475aa76646573ef9b95104215.stex"
+path="res://.import/pen.jpg-9d0a286eace3a9122d4d209a4d865ff2.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/Database/Images/bull.jpg"
-dest_files=[ "res://.import/bull.jpg-7dcf6ee475aa76646573ef9b95104215.stex" ]
+source_file="res://assets/Database/Images/pen.jpg"
+dest_files=[ "res://.import/pen.jpg-9d0a286eace3a9122d4d209a4d865ff2.stex" ]
 
 [params]
 
