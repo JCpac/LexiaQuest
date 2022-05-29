@@ -6,7 +6,7 @@ extends Level
 # EXPORTS
 
 # VARS
-onready var quiz = $"CanvasLayer/Quiz-FourChoices-Syllables"
+onready var quiz = get_node("CanvasLayer/Quiz-Syllables")
 onready var quizGenerator = $QuizGenerator
 
 # METHODS
@@ -14,8 +14,9 @@ func _ready():
 	quizGenerator.generateStartsWithQuizSet(3, 3)
 
 func onPresentCollected() -> void:
-	# Open Syllables quiz
-	quiz.prepareQuiz(quiz.debugTarget, quiz.debugAnswers)
+	# Open quiz
+	var nextQuiz: Dictionary = quizGenerator.getNextQuiz()
+	quiz.prepareQuiz(nextQuiz.target, nextQuiz.correctAnswers, nextQuiz.wrongAnswers, quiz.SYLLABLES_QUIZ_TYPES.STARTS_WITH)
 	quiz.visible = true
 	player.paused = true
 

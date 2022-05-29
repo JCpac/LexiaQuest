@@ -155,7 +155,7 @@ autoplay = true
 
 [node name="ScoreUI" parent="CanvasLayer" instance=ExtResource( 6 )]
 
-[node name="Quiz-FourChoices-Syllables" parent="CanvasLayer" instance=ExtResource( 9 )]
+[node name="Quiz-Syllables" parent="CanvasLayer" instance=ExtResource( 9 )]
 visible = false
 
 [node name="QuizCompleteTimer" type="Timer" parent="."]
@@ -170,4 +170,4 @@ script = ExtResource( 11 )
 [connection signal="playerReached" from="Signs/EndSign" to="." method="_on_EndSign_playerReached"]
 [connection signal="died" from="Player" to="." method="_on_Player_died"]
 [connection signal="timeout" from="CanvasLayer/TimerUI" to="." method="_on_TimerUI_timeout"]
-[connection signal="completed" from="CanvasLayer/Quiz-FourChoices-Syllables" to="." method="_on_Quiz_completed"]
+[connection signal="completed" from="CanvasLayer/Quiz-Syllables" to="." method="_on_Quiz_completed"]
