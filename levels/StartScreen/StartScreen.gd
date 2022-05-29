@@ -1,11 +1,21 @@
 class_name StartScreen extends Node2D
 
 
+# CONSTS
+const firstLevelPath: String = "res://levels/Level-1/Level-1.tscn"
+
 # VARS
 onready var animation: AnimationPlayer = $AnimationPlayer
 onready var ui: StartScreenUI = $CanvasLayer/StartScreenUI
 
 func _input(event):
+	# Left mouse button clicked during animation
+	if event is InputEventMouseButton and event.button_index == BUTTON_LEFT and event.pressed:
+		if animation.is_playing():
+			animation.advance(6)
+			get_tree().set_input_as_handled()
+
+	# Pressed Enter during animation
 	if event.is_action_pressed("ui_accept"):
 		if animation.is_playing():
 			animation.advance(6)
@@ -29,10 +39,10 @@ func _on_AnimationPlayer_animation_finished(_anim_name):
 	ui.enabled = true
 
 func _on_StartScreenUI_startGame():
-	var code: int = get_tree().change_scene("res://levels/Level_1/Level_1.tscn")
+	var code: int = get_tree().change_scene(firstLevelPath)
 
 	if OK != code:
-		var error: String = "Can't open resource path for Level_1" if ERR_CANT_OPEN else "Couldn't instantiate Level_1 scene"
+		var error: String = "Can't open resource path for first level" if ERR_CANT_OPEN else "Couldn't instantiate level scene"
 		push_error(error)
 		print_stack()
 		get_tree().quit()
