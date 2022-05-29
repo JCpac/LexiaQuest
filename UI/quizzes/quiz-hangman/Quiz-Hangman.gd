@@ -14,7 +14,7 @@ export(int) var minNumColumns = 1
 export(int) var maxNumColumns = 4
 export(String) var debugTarget = "ball"
 export(int, 0, 10) var debugHintChars = 1
-export(int, 2, 10) var debugNumAnswers = 6
+export(int, 2, 10) var debugNumAnswers = 8
 
 # VARS
 onready var targetImage: TextureRect = $QuizArea/HBoxContainer/LeftSide/Image/TextureRect
@@ -34,65 +34,13 @@ func _ready():
 
 	# If the quiz scene itself is played, automatically use debug values
 	if OS.is_debug_build() and get_parent() == get_tree().root:
-		prepareQuiz(debugTarget, debugHintChars, debugNumAnswers)
+		var debugHiddenTarget: String = _debugGenerateTargetWithHintLetters(debugTarget, debugHintChars)
+		var debugAnswers: Array = _debugGenerateHangmanAnswers(debugTarget, debugHiddenTarget, debugNumAnswers)
+		prepareQuiz(debugTarget, debugHiddenTarget, debugAnswers)
 
-# Assigns the quiz with a target word and several possible answer letters to complete the word
-# Generates the quiz UI based on the provided values
-# Assumes that all correct letters are provided
-# `numOfHintChars` is, at most, half the length of the target word
-# `numOfAnswerButtons` is restricted to even numbers and between [target word's length + 2] and [target word's length x 2]
-func prepareQuiz(targetWord: String, numOfHintChars: int, numOfAnswerButtons: int) -> void:
-	self.target = targetWord
-
-	# Set target image
-	targetImage.texture = load("res://assets/Database/Images/%s.jpg" % targetWord)
-
-	# Restrict `numOfHintChars` and set target word display with random hint characters
-	var targetHalfLength: int = target.length() >> 1
-	if numOfHintChars < 0:
-		numOfHintChars = 0
-	elif numOfHintChars > targetHalfLength:
-		numOfHintChars = targetHalfLength
-	targetLabel.text = _generateTargetWithHintLetters(targetWord, numOfHintChars)
-
-	# Restrict `numOfAnswerButtons` to its assigned range and to even numbers
-	if numOfAnswerButtons & 1:
-		numOfAnswerButtons += 1
-	if numOfAnswerButtons < targetWord.length() + 2:
-		numOfAnswerButtons = targetWord.length() + 2
-	elif numOfAnswerButtons > targetWord.length() << 1:
-		numOfAnswerButtons = targetWord.length() << 1
-
-	# Get hint character indexes
-	var hintCharIndexes: Array = []
-	for i in targetWord.length():
-		if not targetLabel.text[i] == '_':
-			hintCharIndexes.append(i)
-
-	# Get missing letters
-	self.missingLetters = _getMissingLetters(targetWord, hintCharIndexes)
-
-	# Clear answer grid
-	# (this quiz scene is instanced once per level and reused for each activity)
-	for gridChild in answerGrid.get_children():
-		gridChild.free()
-
-	# Generate answer buttons and place them on the tree
-	var buttonsArray: Array = _generateAnswerButtons(targetWord, numOfAnswerButtons, hintCharIndexes)
-	for node in buttonsArray:
-		answerGrid.add_child(node)
-
-	# Calculate new appropriate grid size (floored half of the number of answers)
-	var newNumOfColumns: int = numOfAnswerButtons >> 1
-	if newNumOfColumns < minNumColumns:
-		newNumOfColumns = minNumColumns
-	elif newNumOfColumns > maxNumColumns:
-		newNumOfColumns = maxNumColumns
-	answerGrid.columns = newNumOfColumns
-
-	print_debug("Quiz Hangman: Quiz prepared with target word '%s' and revealed label '%s'" % [targetWord, targetLabel.text])
-
-func _generateTargetWithHintLetters(targetWord: String, numOfHintChars: int) -> String:
+# Generates target word with hidden characters and some hint characters
+# Only used when debugging the quiz's scene
+func _debugGenerateTargetWithHintLetters(targetWord: String, numOfHintChars: int) -> String:
 	var shownTargetWord: String = "_".repeat(targetWord.length())
 	var chosenHintCharsIndexes: Array = []
 
@@ -108,6 +56,73 @@ func _generateTargetWithHintLetters(targetWord: String, numOfHintChars: int) -> 
 
 	return shownTargetWord
 
+# Generates character answers for a "Hangman" quiz
+# `targetWord` is the full target word (no hidden characters)
+# `hiddenTargetWord` is the version of `targetWord` with hidden characters
+# `numOfAnswers` is the total number of answers (necessary correct + random wrong) to be generated
+# Only used when debugging the quiz's scene
+func _debugGenerateHangmanAnswers(targetWord: String, hiddenTargetWord: String, numOfAnswers: int) -> Array:
+	var answerChars: Array = []	# Holds the possible answers
+
+	# Get hint character indexes
+	var hintCharIndexes: Array = _getHintCharIndexes(targetWord, hiddenTargetWord)
+
+	# Add target word's characters to possible answers, except for the hint characters
+	for i in range(0, targetWord.length()):
+		if not i in hintCharIndexes:
+			answerChars.append(targetWord[i])
+
+	# Randomize and add extra characters
+	var numOfExtraChars = numOfAnswers - len(answerChars)
+	while numOfExtraChars:
+		var randomASCII: int = rng.randi_range(97, 122)	# ASCII values for range a-z
+		answerChars.append(char(randomASCII))
+		numOfExtraChars -= 1
+
+	answerChars.shuffle()
+	return answerChars
+
+# Assigns the quiz with a target word and several possible answer letters to complete the word
+# Generates the quiz UI based on the provided values
+# Assumes that all correct letters are provided
+# `hiddenTargetWord` is a version of `targetWord` with its characters replaced with underscores, with some exceptions (the hint characters)
+# `answers` contains all the characters (necessary correct + random characters)
+func prepareQuiz(targetWord: String, hiddenTargetWord: String, answers: Array) -> void:
+	self.target = targetWord
+	self.targetLabel.text = hiddenTargetWord
+	self.targetImage.texture = load("res://assets/Database/Images/%s.jpg" % targetWord)
+
+	var hintCharIndexes: Array = _getHintCharIndexes(targetWord, hiddenTargetWord)
+	self.missingLetters = _getMissingLetters(targetWord, hintCharIndexes)
+
+	# Clear answer grid
+	# (this quiz scene is instanced once per level and reused for each activity)
+	for gridChild in answerGrid.get_children():
+		gridChild.free()
+
+	# Generate answer buttons and place them on the tree
+	var buttonsArray: Array = _generateAnswerButtons(answers)
+	for node in buttonsArray:
+		answerGrid.add_child(node)
+
+	# Calculate new appropriate grid size (floored half of the number of answers)
+	var newNumOfColumns: int = len(answers) >> 1
+	if newNumOfColumns < minNumColumns:
+		newNumOfColumns = minNumColumns
+	elif newNumOfColumns > maxNumColumns:
+		newNumOfColumns = maxNumColumns
+	answerGrid.columns = newNumOfColumns
+
+	print_debug("Quiz Hangman: Quiz prepared with target word '%s' and revealed label '%s'" % [targetWord, targetLabel.text])
+
+# Creates an `Array` with the indexes of the `targetWord`'s characters that weren't hidden (the hint characters)
+func _getHintCharIndexes(targetWord: String, hiddenTargetWord: String) -> Array:
+	var hintCharIndexes: Array = []
+	for i in targetWord.length():
+		if not hiddenTargetWord[i] == '_':
+			hintCharIndexes.append(i)
+	return hintCharIndexes
+
 # Creates an array with the unique letters that were *not* revealed in the target label
 func _getMissingLetters(targetWord: String, hintCharIndexes: Array) -> Array:
 	var missingLettersArray: Array = []
@@ -117,40 +132,23 @@ func _getMissingLetters(targetWord: String, hintCharIndexes: Array) -> Array:
 
 	return missingLettersArray
 
-func _generateAnswerButtons(targetWord: String, numOfAnswerButtons: int, hintCharIndexes: Array) -> Array:
-	var answerChars: Array = []	# Holds the possible answers
+func _generateAnswerButtons(answers: Array) -> Array:
 	var answerButtons: Array = []	# Holds the buttons with the possible answers
 
-	# Add target word's characters to possible answers, except for the hint characters
-	var tempTargetWord: Array = []
-	for i in range(0, targetWord.length()):
-		if not i in hintCharIndexes:
-			tempTargetWord.append(targetWord[i])
-	answerChars = tempTargetWord
-
-	# Randomize and add extra characters
-	var numOfExtraChars = numOfAnswerButtons - len(answerChars)
-	while numOfExtraChars:
-		var randomASCII: int = rng.randi_range(97, 122)	# ASCII values for range a-z
-		answerChars.append(char(randomASCII))
-		numOfExtraChars -= 1
-
-	# Shuffle answer characters array and create buttons
-	answerChars.shuffle()
-	for i in answerChars:
+	for answer in answers:
 		# Generate duplicate buttons and assign them values
-		var newButton: Button = buttonLetterScene.instance()
-		newButton.text = i
+		var newButton: ButtonLetter = buttonLetterScene.instance()
+		newButton.setUp(answer)
 		newButton.connect("pressed", self, "_on_AnswerButton_pressed", [newButton])
 		answerButtons.append(newButton)
 
 	return answerButtons
 
-func _on_AnswerButton_pressed(target: Button) -> void:
-	var letterMatchIndex: int = _validateAnswer(target.text)
-	if not letterMatchIndex == -1:
-		targetLabel.text[letterMatchIndex] = target.text	# Reveal character in target word's label
+func _on_AnswerButton_pressed(target: ButtonLetter) -> void:
+	var answerIndexInTarget: int = _getAnswerIndexInTarget(target.text)
+	if not answerIndexInTarget == -1:
 		target.setCorrect()
+		targetLabel.text[answerIndexInTarget] = target.text	# Reveal it in target word's label
 		emit_signal("correct")
 		print_debug("Quiz Hangman: Letter '%s' was correct" % target.text)
 
@@ -166,7 +164,7 @@ func _on_AnswerButton_pressed(target: Button) -> void:
 
 # Check if chosen character exists in the target word and is hidden in the target word's label
 # Return the index of the matching letter or `-1` if none match
-func _validateAnswer(answer: String) -> int:
+func _getAnswerIndexInTarget(answer: String) -> int:
 	for i in range(self.target.length()):
 		if answer == self.target[i] and targetLabel.text[i] == "_":
 			return i
@@ -178,9 +176,9 @@ func _validateTargetIsComplete() -> bool:
 
 # Reveals the unchosen answers after quiz completion
 func _revealRemainingAnswers() -> void:
-	for buttonLetter in answerGrid.get_children():
-		if not buttonLetter.disabled:
-			if buttonLetter.text in missingLetters:
-				buttonLetter.setPossible()
+	for button in answerGrid.get_children():
+		if not button.disabled:
+			if button.text in missingLetters:
+				button.setPossible()
 			else:
-				buttonLetter.setWrong(false)
+				button.setWrong(false)
