@@ -6,7 +6,7 @@ extends Level
 # EXPORTS
 
 # VARS
-onready var quiz = $"CanvasLayer/Quiz-Hangman"
+onready var quiz = get_node("CanvasLayer/Quiz-Hangman")
 onready var quizGenerator = $QuizGenerator
 
 # METHODS
@@ -16,7 +16,8 @@ func _ready():
 
 func onPresentCollected() -> void:
 	# Open quiz
-	quiz.prepareQuiz(quiz.debugTarget, quiz.debugHintChars, quiz.debugNumAnswers)
+	var nextQuiz: Dictionary = quizGenerator.getNextQuiz()
+	quiz.prepareQuiz(nextQuiz.target, nextQuiz.hiddenTarget, nextQuiz.answers)
 	quiz.visible = true
 	player.paused = true
 
