@@ -78,10 +78,13 @@ func lockPlayerInLevelBounds() -> void:
 	var playerExtents: Vector2 = (player.get_node("CollisionShape2D").shape as RectangleShape2D).extents
 	if player.position.y - playerExtents.y < currentLevelBounds.top:
 		player.position.y = currentLevelBounds.top + playerExtents.y
+		player.velocity.y = 0
 	if player.position.x - playerExtents.x < currentLevelBounds.left:
 		player.position.x = currentLevelBounds.left + playerExtents.x
+		player.velocity.x = 0
 	if player.position.x + playerExtents.x > currentLevelBounds.right:
 		player.position.x = currentLevelBounds.right - playerExtents.x
+		player.velocity.x = 0
 
 	# Player fell off level bounds
 	if player.position.y + playerExtents.y > currentLevelBounds.bottom + playerBottomBoundOffset:
