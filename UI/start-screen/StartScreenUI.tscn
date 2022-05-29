@@ -39,15 +39,11 @@ margin_right = 249.0
 margin_bottom = 65.0
 grow_horizontal = 2
 grow_vertical = 2
-focus_neighbour_top = NodePath("../../Exit/Button")
-focus_neighbour_bottom = NodePath("../../Exit/Button")
-focus_next = NodePath("../../Exit/Button")
-focus_previous = NodePath("../../Exit/Button")
-mouse_default_cursor_shape = 2
+focus_mode = 0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 keep_pressed_outside = true
-text = "Start Game"
+text = "Começar Jogo"
 
 [node name="Exit" type="PanelContainer" parent="."]
 anchor_left = 0.4
@@ -65,15 +61,11 @@ margin_right = 249.0
 margin_bottom = 65.0
 grow_horizontal = 2
 grow_vertical = 2
-focus_neighbour_top = NodePath("../../Start/Button")
-focus_neighbour_bottom = NodePath("../../Start/Button")
-focus_next = NodePath("../../Start/Button")
-focus_previous = NodePath("../../Start/Button")
-mouse_default_cursor_shape = 2
+focus_mode = 0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 keep_pressed_outside = true
-text = "Exit"
+text = "Sair"
 
 [connection signal="pressed" from="Start/Button" to="." method="_on_StartButton_pressed"]
 [connection signal="pressed" from="Exit/Button" to="." method="_on_ExitButton_pressed"]
