@@ -1,9 +1,18 @@
-extends Button
+class_name ButtonLetter extends Button
 
 
 # VARS
 
 # METHODS
+func setUp(value: String) -> void:
+	self.text = value
+	self.disabled = false
+	_clearStyles()
+
+func _clearStyles() -> void:
+	add_stylebox_override("disabled", null)
+	$MarginContainer/TextureRect.texture = null
+
 func setCorrect() -> void:
 	var correctStyle: StyleBoxFlat = load("res://UI/Button/Button-Correct.tres")
 	var correctIcon: Texture = load("res://assets/Sprites/quiz/correct.png")

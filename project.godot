@@ -9,6 +9,16 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "Button",
+"class": "ButtonLetter",
+"language": "GDScript",
+"path": "res://UI/Button/Letter/Button-Letter.gd"
+}, {
+"base": "Button",
+"class": "ButtonQuiz",
+"language": "GDScript",
+"path": "res://UI/Button/Quiz/Button-Quiz.gd"
+}, {
 "base": "Node2D",
 "class": "Cherry",
 "language": "GDScript",
@@ -80,6 +90,8 @@ _global_script_classes=[ {
 "path": "res://assets/Database/word.gd"
 } ]
 _global_script_class_icons={
+"ButtonLetter": "",
+"ButtonQuiz": "",
 "Cherry": "",
 "DialogueBox": "res://addons/adbox/icon.png",
 "DustCloud": "",

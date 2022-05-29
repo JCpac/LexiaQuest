@@ -1,22 +1,40 @@
-extends Button
+class_name ButtonQuiz extends Button
 
 
 # VARS
+var isCorrect: bool
 
 # METHODS
-func setCorrect() -> void:
+func setUp(value: String, isCorrect: bool) -> void:
+	self.text = value
+	self.isCorrect = isCorrect
+	self.disabled = false
+	_clearStyles()
+
+func _clearStyles() -> void:
+	add_stylebox_override("disabled", null)
+	$MarginContainer/TextureRect.texture = null
+
+func revealState(wasChosen: bool) -> void:
+	self.disabled = true
+
+	if self.isCorrect:
+		_setCorrect()
+		return
+
+	_setWrong(wasChosen)
+
+func _setCorrect() -> void:
 	var correctStyle: StyleBoxFlat = load("res://UI/Button/Button-Correct.tres")
 	var correctIcon: Texture = load("res://assets/Sprites/quiz/correct.png")
 	add_stylebox_override("disabled", correctStyle)
 	$MarginContainer/TextureRect.texture = correctIcon
-	disabled = true
 
-func setWrong(wasChosen: bool) -> void:
+func _setWrong(wasChosen: bool) -> void:
 	if wasChosen:
 		_setWrongStyle()
 
 	_setWrongIcon()
-	disabled = true
 
 func _setWrongStyle() -> void:
 	var wrongStyle: StyleBoxFlat = load("res://UI/Button/Button-Wrong.tres")
