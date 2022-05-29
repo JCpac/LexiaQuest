@@ -37,6 +37,7 @@ func _setButtonSignalConnections() -> void:
 # Expects the elements of `extraAnswersArray` to be of type `String`
 func prepareQuiz(targetWord: String, extraAnswersArray: Array) -> void:
 	self.target = targetWord
+	self.targetImage.texture = load("res://assets/Database/Images/%s.jpg" % targetWord)
 
 	# Join target word and extra answers
 	var allAnswers: Array = extraAnswersArray.duplicate()
