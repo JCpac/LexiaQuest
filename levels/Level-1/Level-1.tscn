@@ -106,6 +106,7 @@ position = Vector2( 80, -16 )
 
 [node name="EndSign" parent="Signs" instance=ExtResource( 8 )]
 position = Vector2( 3936, 560 )
+hitboxHeight = 128
 
 [node name="Player" parent="." instance=ExtResource( 15 )]
 position = Vector2( -96, -16 )
