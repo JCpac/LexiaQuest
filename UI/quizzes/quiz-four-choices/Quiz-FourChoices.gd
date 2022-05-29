@@ -47,26 +47,28 @@ func prepareQuiz(targetWord: String, extraAnswersArray: Array) -> void:
 	allAnswers.shuffle()
 	var answerButtons: Array = answerList.get_children()
 	for i in range(4):
-		(answerButtons[i] as Button).text = allAnswers[i]
+		var answer: String = allAnswers[i]
+		var buttonQuiz: ButtonQuiz = answerButtons[i]
+		buttonQuiz.setUp(answer, answer == targetWord)
 
 	print_debug("Quiz Four Choices: Quiz prepared with target word/image '%s'" % targetWord)
 
-func _validateAnswer(answer: String) -> bool:
-	return self.target == answer
+func _on_AnswerButton_pressed(target: ButtonQuiz) -> void:
+	target.revealState(true)
 
-func _on_AnswerButton_pressed(target: Button) -> void:
-	if _validateAnswer(target.text):
-		target.setCorrect()
+	if _validateAnswer(target):
 		_revealRemainingAnswers()
 		emit_signal("correct")
 		print_debug("Quiz Syllables: Answer '%s' was correct" % target.text)
 	else:
-		target.setWrong(true)
 		emit_signal("wrong")
 		print_debug("Quiz Syllables: Answer '%s' was wrong" % target.text)
 
+func _validateAnswer(target: ButtonQuiz) -> bool:
+	return target.isCorrect
+
 # Reveals the unchosen wrong answers after quiz completion
 func _revealRemainingAnswers() -> void:
-	for buttonWord in answerList.get_children():
-		if not buttonWord.disabled:
-			buttonWord.setWrong(false)
+	for buttonQuiz in answerList.get_children():
+		if not buttonQuiz.disabled:
+			buttonQuiz.revealState(false)
