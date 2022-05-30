@@ -2,33 +2,62 @@ class_name EndScreenUI extends Control
 
 
 # SIGNALS
-signal restartGame
+signal nextLevel
+signal restartLevel
 signal backToStartScreen
 
 # EXPORTS
-export(bool) var enabled = false setget setEnabled
-export(String, MULTILINE) var text = "Your message here..." setget setText, getText
+export(bool) var enabled = false setget _setEnabled
+export(String, MULTILINE) var message = "Your message here..." setget _setMessage
+export(bool) var showNextLevelButton = true setget _setShowNextLevelButton
 
+# VARS
+onready var messageLabel: RichTextLabel = $VBoxContainer/MarginContainer/Message
+onready var nextLevelButton: Button = $VBoxContainer/Options/Next
+onready var restartLevelButton: Button = $VBoxContainer/Options/Restart
+onready var backButton: Button = $VBoxContainer/Options/Back
+
+# METHODS
 func _ready():
-	setEnabled(enabled)
+	# Call setters
+	# (UI nodes won't be affected if setters are called before they're ready,
+	# which can happen if exported variables have non-default values)
+	_setEnabled(self.enabled)
+	_setMessage(self.message)
+	_setShowNextLevelButton(self.showNextLevelButton)
 
-func setEnabled(value: bool) -> void:
+func _setMessage(text: String) -> void:
+	message = text
+
+	if self.messageLabel:
+		self.messageLabel.bbcode_text = "[center]%s[/center]" % text
+
+func _setShowNextLevelButton(showButton: bool) -> void:
+	showNextLevelButton = showButton
+
+	if self.nextLevelButton:
+		self.nextLevelButton.visible = showButton
+
+func _setEnabled(value: bool) -> void:
 	enabled = value
-	$Restart/Button.disabled = not value
-	$Back/Button.disabled = not value
 
-	if value:
-		$Restart/Button.grab_focus()
+	if self.nextLevelButton:
+		self.nextLevelButton.disabled = not value
+		self.nextLevelButton.mouse_default_cursor_shape = CURSOR_POINTING_HAND if value else CURSOR_ARROW
 
+	if self.restartLevelButton:
+		self.restartLevelButton.disabled = not value
+		self.restartLevelButton.mouse_default_cursor_shape = CURSOR_POINTING_HAND if value else CURSOR_ARROW
 
-func setText(newText: String) -> void:
-	$Message.bbcode_text = "[center]%s[/center]" % newText
+	if self.backButton:
+		self.backButton.disabled = not value
+		self.backButton.mouse_default_cursor_shape = CURSOR_POINTING_HAND if value else CURSOR_ARROW
 
-func getText() -> String:
-	return $Message.text
+func _on_Next_pressed():
+	emit_signal("nextLevel")
 
-func _on_RestartButton_pressed():
-	emit_signal("restartGame")
+func _on_Restart_pressed():
+	emit_signal("restartLevel")
 
-func _on_BackButton_pressed():
+func _on_Back_pressed():
 	emit_signal("backToStartScreen")
