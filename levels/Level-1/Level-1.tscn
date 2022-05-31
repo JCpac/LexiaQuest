@@ -140,15 +140,15 @@ autoplay = true
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
-[node name="TimerUI" parent="CanvasLayer" instance=ExtResource( 2 )]
-
-[node name="ScoreUI" parent="CanvasLayer" instance=ExtResource( 6 )]
+[node name="Quiz-FourChoices" parent="CanvasLayer" instance=ExtResource( 9 )]
+visible = false
 
 [node name="EndScreenUI" parent="CanvasLayer" instance=ExtResource( 11 )]
 visible = false
 
-[node name="Quiz-FourChoices" parent="CanvasLayer" instance=ExtResource( 9 )]
-visible = false
+[node name="TimerUI" parent="CanvasLayer" instance=ExtResource( 2 )]
+
+[node name="ScoreUI" parent="CanvasLayer" instance=ExtResource( 6 )]
 
 [node name="QuizCompleteTimer" type="Timer" parent="."]
 wait_time = 2.0
@@ -161,8 +161,8 @@ script = ExtResource( 10 )
 [connection signal="playerHasCrossed" from="Signs/StartSign" to="." method="_onPlayerCrossedStartSign"]
 [connection signal="playerReached" from="Signs/EndSign" to="." method="_onPlayerReachedEndOfLevel"]
 [connection signal="died" from="Player" to="." method="_onPlayerDied"]
-[connection signal="timeout" from="CanvasLayer/TimerUI" to="." method="_onTimerTimeout"]
+[connection signal="completed" from="CanvasLayer/Quiz-FourChoices" to="." method="_onQuizCompleted"]
 [connection signal="backToStartScreen" from="CanvasLayer/EndScreenUI" to="." method="_onBackToStartScreen"]
 [connection signal="nextLevel" from="CanvasLayer/EndScreenUI" to="." method="_onGoToNextLevel"]
 [connection signal="restartLevel" from="CanvasLayer/EndScreenUI" to="." method="_onRestartLevel"]
-[connection signal="correct" from="CanvasLayer/Quiz-FourChoices" to="." method="_on_Quiz_correct"]
+[connection signal="timeout" from="CanvasLayer/TimerUI" to="." method="_onTimerTimeout"]

@@ -2,7 +2,7 @@ class_name Level extends Node2D
 
 
 # PRELOADS & CONSTS
-const presentScene: PackedScene = preload("res://collectibles/Cherry/Cherry.tscn")
+const presentScene: PackedScene = preload("res://collectibles/Present/Present.tscn")
 
 const DB_PATH: String = "res://assets/Database/db.json"
 
@@ -18,6 +18,7 @@ export(bool) var hasCliff = true
 export(int, 0, 2048, 32) var cliffCameraBottomBound = 1024
 export(int, 0, 100) var playerBottomBoundOffset = 40
 export(int, 30, 1800, 30) var timerStart = 300
+export(String) var quizNodeName: String = "CanvasLayer/Quiz-FourChoices"
 export(String, MULTILINE) var victoryMessage = "Chegaste ao fim do nível!"
 export(String, MULTILINE) var timeoutMessage = "Oh no! You ran out of time and died mysteriously...\nWould you like to play again?"
 export(String, MULTILINE) var fallMessage = "Essa deve ter doído...\nQueres tentar outra vez?"
@@ -29,9 +30,12 @@ onready var collectibles: Node2D = $Collectibles
 onready var scoreCounter: ScoreUI = $CanvasLayer/ScoreUI
 onready var quizCompleteTimer: Timer = $QuizCompleteTimer
 onready var endScreen: EndScreenUI = $CanvasLayer/EndScreenUI
+onready var quiz
+onready var quizGenerator = $QuizGenerator
 var score: int = 0
 var paused: bool = false
 var currentLevelBounds: Dictionary
+var currentPresent: Present
 
 # METHODS
 func _enter_tree():
@@ -46,6 +50,7 @@ func _ready():
 	setupPresentCollectibles()
 	setCameraBounds()
 	adjustSkyScale()
+	setQuizNode()
 
 func _process(_delta):
 	if paused:
@@ -88,6 +93,9 @@ func adjustSkyScale() -> void:
 
 	$ParallaxBackground/ParallaxLayer/Sky.scale = skyScale
 
+func setQuizNode() -> void:
+	quiz = get_node(quizNodeName)
+
 # Replaces all present tiles on `Collectible Tiles` tilemap with `Present` scenes.
 # Also sets-up the maximum score counter in `ScoreUI`
 # Found in https://www.reddit.com/r/godot/comments/6vg5v8/using_tilemaps_for_more_advanced_objects/dm26wy7/
@@ -114,7 +122,8 @@ func setupPresentCollectibles() -> void:
 		# Remove present tile from tilemap
 		tileMap.set_cell(position.x, position.y, -1)
 
-		# Setup signal
+		# Setup signals
+		node.connect("opened", self, "onPresentOpened", [node])
 		node.connect("collected", self, "onPresentCollected")
 
 		presentCount += 1
@@ -136,9 +145,23 @@ func endLevel() -> void:
 	endScreen.visible = true
 
 # SIGNAL CALLBACKS
+func onPresentOpened(target: Present) -> void:
+	quiz.visible = true
+	player.paused = true
+	currentPresent = target
+
+func _onQuizCompleted():
+	currentPresent.collect()
+	currentPresent = null
+
 func onPresentCollected() -> void:
 	score += 1
 	scoreCounter.setScore(score)
+	quizCompleteTimer.start()
+	yield(quizCompleteTimer, "timeout")
+
+	quiz.visible = false
+	player.paused = false
 
 func _onPlayerCrossedStartSign():
 	if not timer.isRunning():
