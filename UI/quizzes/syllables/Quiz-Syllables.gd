@@ -105,6 +105,7 @@ func _on_AnswerButton_pressed(target: ButtonQuiz) -> void:
 	target.revealState(true)
 
 	if _validateAnswer(target):
+		$CorrectSFX.play()
 		numCorrectAnswersLeft -= 1
 		emit_signal("correct")
 		print_debug("Quiz Syllables: Answer '%s' was correct" % target.text)
@@ -114,6 +115,7 @@ func _on_AnswerButton_pressed(target: ButtonQuiz) -> void:
 			emit_signal("completed")
 			print_debug("Quiz Syllables: Quiz complete")
 	else:
+		$WrongSFX.play()
 		emit_signal("wrong")
 		print_debug("Quiz Syllables: Answer '%s' was wrong" % target.text)
 

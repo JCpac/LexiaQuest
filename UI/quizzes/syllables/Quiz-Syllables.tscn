@@ -1,7 +1,9 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://UI/quizzes/syllables/Quiz-Syllables.gd" type="Script" id=1]
 [ext_resource path="res://UI/quizzes/Quiz-Styles.tres" type="Theme" id=2]
+[ext_resource path="res://assets/Sound/mixkit.co/mixkit-select-click-1109.wav" type="AudioStream" id=3]
+[ext_resource path="res://assets/Sound/mixkit.co/mixkit-click-error-1110.wav" type="AudioStream" id=4]
 
 [node name="Quiz-Syllables" type="PanelContainer"]
 anchor_right = 1.0
@@ -57,3 +59,11 @@ margin_right = 1180.0
 margin_bottom = 414.0
 size_flags_vertical = 6
 columns = 2
+
+[node name="CorrectSFX" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 3 )
+volume_db = -6.0
+
+[node name="WrongSFX" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 4 )
+volume_db = -6.0

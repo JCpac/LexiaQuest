@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/mixkit-select-click-1109.wav-e05661f9ebf345ea81fff51031151873.sample"
+
+[deps]
+
+source_file="res://assets/Sound/mixkit.co/mixkit-select-click-1109.wav"
+dest_files=[ "res://.import/mixkit-select-click-1109.wav-e05661f9ebf345ea81fff51031151873.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

@@ -151,15 +151,15 @@ func onPresentOpened(target: Present) -> void:
 	currentPresent = target
 
 func _onQuizCompleted():
+	quizCompleteTimer.start()
+	yield(quizCompleteTimer, "timeout")
+
 	currentPresent.collect()
 	currentPresent = null
 
 func onPresentCollected() -> void:
 	score += 1
 	scoreCounter.setScore(score)
-	quizCompleteTimer.start()
-	yield(quizCompleteTimer, "timeout")
-
 	quiz.visible = false
 	player.paused = false
 

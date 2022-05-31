@@ -147,6 +147,7 @@ func _generateAnswerButtons(answers: Array) -> Array:
 func _on_AnswerButton_pressed(target: ButtonLetter) -> void:
 	var answerIndexInTarget: int = _getAnswerIndexInTarget(target.text)
 	if not answerIndexInTarget == -1:
+		$CorrectSFX.play()
 		target.setCorrect()
 		targetLabel.text[answerIndexInTarget] = target.text	# Reveal it in target word's label
 		emit_signal("correct")
@@ -158,6 +159,7 @@ func _on_AnswerButton_pressed(target: ButtonLetter) -> void:
 			print_debug("Quiz Hangman: Target '%s' completed" % self.target)
 		return
 
+	$WrongSFX.play()
 	target.setWrong(true)
 	emit_signal("wrong")
 	print_debug("Quiz Hangman: Letter '%s' was wrong" % target.text)
