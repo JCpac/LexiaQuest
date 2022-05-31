@@ -4,7 +4,7 @@ extends PanelContainer
 # PRELOADS & CONSTS
 
 # SIGNALS
-signal correct
+signal completed
 signal wrong
 
 # EXPORTS
@@ -58,7 +58,7 @@ func _on_AnswerButton_pressed(target: ButtonQuiz) -> void:
 
 	if _validateAnswer(target):
 		_revealRemainingAnswers()
-		emit_signal("correct")
+		emit_signal("completed")
 		print_debug("Quiz Syllables: Answer '%s' was correct" % target.text)
 	else:
 		emit_signal("wrong")
