@@ -30,7 +30,6 @@ shape = SubResource( 1 )
 
 [node name="OpenSFX" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 2 )
-volume_db = -6.0
 
 [node name="CollectSFX" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 4 )
