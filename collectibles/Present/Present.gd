@@ -32,12 +32,9 @@ func _spriteHoverProcess() -> void:
 
 func collect() -> void:
 	$CollectSFX.play()
-	sprite.queue_free()
 	$Area2D.queue_free()
+	$Sprite.texture = load("res://assets/Sprites/presents/Present-Open.png")
 	emit_signal("collected")
-
-	yield($CollectSFX, "finished")
-	queue_free()
 
 # SETTERS/GETTERS
 func _onPresentTouched(_body):
