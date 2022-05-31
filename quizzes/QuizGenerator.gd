@@ -1,29 +1,40 @@
-extends Node
+class_name QuizGenerator extends Node
 
 
 # CONSTS
 const HANGMAN_MAX_HINT_CHAR_RATIO = 0.5
 
+# ENUMS
+enum QUIZ_TYPES { MATCH_IMAGE, STARTS_WITH, RHYMES_WITH, HANGMAN }
+
 # VARS
-var quizSet: Array = []
-var rng: RandomNumberGenerator = RandomNumberGenerator.new()
+var _quizSet: Array = []
+var _rng: RandomNumberGenerator = RandomNumberGenerator.new()
 
 # METHODS
 func _init():
 	randomize()
-	rng.randomize()
+	_rng.randomize()
+
+# Clear generated quiz sets
+func clearQuizSets() -> void:
+	_quizSet.clear()
+
+# Randomize generated quiz sets
+func randomizeQuizSets() -> void:
+	_quizSet.shuffle()
 
 # Generate a random set of "Match Image" quizzes. Each quiz can be retrieved by calling `getNextQuiz()`
 # These quizzes are `Dictionaries` with the properties:
+# - `quizType` (`QuizGenerator.QUIZ_TYPES.MATCH_IMAGE`)
 # - `target` (`String`)
 # - `extraAnswers` (`Array` of `Strings`)
 func generateMatchImageQuizSet() -> void:
-	self.quizSet.clear()
-
 	JsonLoader.matchImageWords.shuffle()
 	for wordSet in JsonLoader.matchImageWords:
 		# Setup dictionary structure
 		var quizDictionary: Dictionary = {}
+		quizDictionary.quizType = QUIZ_TYPES.MATCH_IMAGE
 		quizDictionary.target = ""
 		quizDictionary.extraAnswers = []
 
@@ -36,21 +47,21 @@ func generateMatchImageQuizSet() -> void:
 		for i in range(3):
 			quizDictionary.extraAnswers.append(tempWordSet[i])
 
-		self.quizSet.append(quizDictionary)
+		_quizSet.append(quizDictionary)
 
 # Generate a random set of "Starts With" quizzes. Each quiz can be retrieved by calling `getNextQuiz()`
 # These quizzes are `Dictionaries` with the properties:
+# - `quizType` (`QuizGenerator.QUIZ_TYPES.STARTS_WITH`)
 # - `target` (`String`)
 # - `correctAnswers` (`Array` of `Strings`)
 # - `wrongAnswers` (`Array` of `Strings`)
 # Each quiz generates with a total of `numOfCorrectAnswersPerQuiz + numOfWrongAnswersPerQuiz` answers
 func generateStartsWithQuizSet(numOfCorrectAnswersPerQuiz: int, numOfWrongAnswersPerQuiz: int) -> void:
-	self.quizSet.clear()
-
 	JsonLoader.startsWithWords.shuffle()
 	for wordSet in JsonLoader.startsWithWords:
 		# Setup dictionary structure
 		var quizDictionary: Dictionary = {}
+		quizDictionary.quizType = QUIZ_TYPES.STARTS_WITH
 		quizDictionary.target = ""
 		quizDictionary.correctAnswers = []
 		quizDictionary.wrongAnswers = []
@@ -86,21 +97,21 @@ func generateStartsWithQuizSet(numOfCorrectAnswersPerQuiz: int, numOfWrongAnswer
 			quizDictionary.wrongAnswers.append_array(aquiredExtraAnswers)
 			aquiredExtraAnswers.clear()
 
-		self.quizSet.append(quizDictionary)
+		_quizSet.append(quizDictionary)
 
 # Generate a random set of "Rhymes" quizzes. Each quiz can be retrieved by calling `getNextQuiz()`
 # These quizzes are `Dictionaries` with the properties:
+# - `quizType` (`QuizGenerator.QUIZ_TYPES.RHYMES_WITH`)
 # - `target` (`String`)
 # - `correctAnswers` (`Array` of `Strings`)
 # - `wrongAnswers` (`Array` of `Strings`)
 # Each quiz generates with a total of `numOfCorrectAnswersPerQuiz + numOfWrongAnswersPerQuiz` answers
 func generateRhymesQuizSet(numOfCorrectAnswersPerQuiz: int, numOfWrongAnswersPerQuiz: int) -> void:
-	self.quizSet.clear()
-
 	JsonLoader.rhymesWords.shuffle()
 	for wordSet in JsonLoader.rhymesWords:
 		# Setup dictionary structure
 		var quizDictionary: Dictionary = {}
+		quizDictionary.quizType = QUIZ_TYPES.RHYMES_WITH
 		quizDictionary.target = ""
 		quizDictionary.correctAnswers = []
 		quizDictionary.wrongAnswers = []
@@ -119,10 +130,11 @@ func generateRhymesQuizSet(numOfCorrectAnswersPerQuiz: int, numOfWrongAnswersPer
 		# Pick random wrong answers
 		quizDictionary.wrongAnswers = _getExtraRandomWords(numOfWrongAnswersPerQuiz, correctAnswers)
 
-		self.quizSet.append(quizDictionary)
+		_quizSet.append(quizDictionary)
 
 # Generate a set of random "Hangman" quizzes. Each quiz can be retrieved by calling `getNextQuiz()`
 # Each quiz is a `Dictionary` with the properties:
+# - `quizType` (`QuizGenerator.QUIZ_TYPES.HANGMAN`)
 # - `target` (`String`)
 # - - taken from `match-image.json` DB file, as the first word of each set should have an image associated with it
 # - `hiddenTarget` (`String`)
@@ -135,8 +147,6 @@ func generateRhymesQuizSet(numOfCorrectAnswersPerQuiz: int, numOfWrongAnswersPer
 # - represents the ratio of hint characters to the length of the target word
 # - is a number restricted from 0 to `HANGMAN_MAX_HINT_CHAR_RATIO`
 func generateHangmanQuizSet(ratioOfHintCharsPerQuiz: float) -> void:
-	self.quizSet.clear()
-
 	# Restrict `ratioOfHintCharsPerQuiz`
 	ratioOfHintCharsPerQuiz = clamp(ratioOfHintCharsPerQuiz, 0, HANGMAN_MAX_HINT_CHAR_RATIO)
 
@@ -144,6 +154,7 @@ func generateHangmanQuizSet(ratioOfHintCharsPerQuiz: float) -> void:
 	for wordSet in JsonLoader.matchImageWords:
 		# Setup dictionary structure
 		var quizDictionary: Dictionary = {}
+		quizDictionary.quizType = QUIZ_TYPES.HANGMAN
 		quizDictionary.target = ""
 		quizDictionary.hiddenTarget = ""
 		quizDictionary.answers = []
@@ -156,14 +167,14 @@ func generateHangmanQuizSet(ratioOfHintCharsPerQuiz: float) -> void:
 		quizDictionary.hiddenTarget = _generateTargetWithHintLetters(quizDictionary.target, intNumOfHintChars)
 
 		# Randomize number of answers and restrict it to even numbers
-		var numOfAnswers: int = self.rng.randi_range(quizDictionary.target.length() + 2, quizDictionary.target.length() * 2)
+		var numOfAnswers: int = _rng.randi_range(quizDictionary.target.length() + 2, quizDictionary.target.length() * 2)
 		if numOfAnswers & 1:
 			numOfAnswers += 1
 
 		# Create answers (necessary missing characters + random characters)
 		quizDictionary.answers = _generateHangmanAnswers(quizDictionary.target, quizDictionary.hiddenTarget, numOfAnswers)
 
-		self.quizSet.append(quizDictionary)
+		_quizSet.append(quizDictionary)
 
 # Generates a version of `targetWord` with `numOfHintChars` kept and with every other character replaced with underscores
 func _generateTargetWithHintLetters(targetWord: String, numOfHintChars: int) -> String:
@@ -172,9 +183,9 @@ func _generateTargetWithHintLetters(targetWord: String, numOfHintChars: int) -> 
 
 	while chosenHintCharsIndexes.size() < numOfHintChars:
 		# Choose character index that hasn't been chosen yet
-		var charIndex: int = self.rng.randi_range(0, targetWord.length()-1)
+		var charIndex: int = _rng.randi_range(0, targetWord.length()-1)
 		while chosenHintCharsIndexes.has(charIndex):
-			charIndex = self.rng.randi_range(0, targetWord.length()-1)
+			charIndex = _rng.randi_range(0, targetWord.length()-1)
 
 		# Display target word's character at the chosen index
 		shownTargetWord[charIndex] = targetWord[charIndex]
@@ -203,7 +214,7 @@ func _generateHangmanAnswers(targetWord: String, hiddenTargetWord: String, numOf
 	# Randomize and add extra characters
 	var numOfExtraChars = numOfAnswers - len(answerChars)
 	while numOfExtraChars:
-		var randomASCII: int = self.rng.randi_range(97, 122)	# ASCII values for range a-z
+		var randomASCII: int = _rng.randi_range(97, 122)	# ASCII values for range a-z
 		answerChars.append(char(randomASCII))
 		numOfExtraChars -= 1
 
@@ -216,9 +227,9 @@ func _getExtraRandomWords(numOfExtraWords: int, wordsToExclude: Array) -> Array:
 
 	while len(extraAnswers) < numOfExtraWords:
 		# Keep picking random words until the picked word does not exist in `wordsToExclude`
-		var randomIndex: int = self.rng.randi_range(0, len(JsonLoader.allWords) - 1)
+		var randomIndex: int = _rng.randi_range(0, len(JsonLoader.allWords) - 1)
 		while JsonLoader.allWords[randomIndex] in wordsToExclude:
-			randomIndex = self.rng.randi_range(0, len(JsonLoader.allWords) - 1)
+			randomIndex = _rng.randi_range(0, len(JsonLoader.allWords) - 1)
 
 		extraAnswers.append(JsonLoader.allWords[randomIndex])
 
@@ -227,8 +238,9 @@ func _getExtraRandomWords(numOfExtraWords: int, wordsToExclude: Array) -> Array:
 # Gets the next quiz in the last generated set of quizzes
 # Quiz sets can be generated with `generateMatchImageQuizSet()`, `generateStartsWithQuizSet()`, `generateRhymesQuizSet()` and `generateHangmanQuizSet()`
 # Returns an empty `Dictionary` if no quizzes have been generated or the last set of quizzes has been exhausted
+# If quizzes of multiple types have been generated, they can be distinguished with the property `quizType` (`QuizGenerator.QUIZ_TYPES`)
 func getNextQuiz() -> Dictionary:
-	if not len(self.quizSet):
+	if not len(_quizSet):
 		return {}
 
-	return self.quizSet.pop_front()
+	return _quizSet.pop_front()
