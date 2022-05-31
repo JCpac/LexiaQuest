@@ -65,9 +65,26 @@ func generateStartsWithQuizSet(numOfCorrectAnswersPerQuiz: int, numOfWrongAnswer
 		for i in range(smallestNumOfCorrectAnswers):
 			quizDictionary.correctAnswers.append(correctAnswers[i])
 
-		# Pick random wrong answers
-		var wrongAnswers: Array = _getExtraRandomWords(numOfWrongAnswersPerQuiz, correctAnswers)
-		quizDictionary.wrongAnswers.append_array(wrongAnswers)
+		# Pick random extra answers and check if they're wrong,
+		# until `numOfWrongAnswersPerQuiz` is met
+		var wordsToExclude: Array = correctAnswers.duplicate()
+		var aquiredExtraAnswers: Array = []
+		while quizDictionary.wrongAnswers.size() < numOfWrongAnswersPerQuiz:
+			aquiredExtraAnswers = _getExtraRandomWords(numOfWrongAnswersPerQuiz - quizDictionary.wrongAnswers.size(), wordsToExclude)
+
+			# Find indexes of the random extra answers that aren't actually wrong
+			var indexesToExclude: Array = []
+			for i in range(aquiredExtraAnswers.size()):
+				if (aquiredExtraAnswers[i] as String).begins_with(quizDictionary.target):
+					indexesToExclude.append(i)
+
+			# Exclude accidental correct answers
+			for i in indexesToExclude:
+				wordsToExclude.append(aquiredExtraAnswers.pop_at(i))
+
+			# Place actually wrong answers into quiz dictionary
+			quizDictionary.wrongAnswers.append_array(aquiredExtraAnswers)
+			aquiredExtraAnswers.clear()
 
 		self.quizSet.append(quizDictionary)
 
@@ -193,14 +210,14 @@ func _generateHangmanAnswers(targetWord: String, hiddenTargetWord: String, numOf
 	answerChars.shuffle()
 	return answerChars
 
-# Finds and returns `numOfExtraWords` random words from the DB files that do not exist in `excludedWords`
-func _getExtraRandomWords(numOfExtraWords: int, excludedWords: Array) -> Array:
+# Finds and returns `numOfExtraWords` random words from the DB files that do not exist in `wordsToExclude`
+func _getExtraRandomWords(numOfExtraWords: int, wordsToExclude: Array) -> Array:
 	var extraAnswers: Array = []
 
 	while len(extraAnswers) < numOfExtraWords:
-		# Keep picking random words until the picked word does not exist in `excludedWords`
+		# Keep picking random words until the picked word does not exist in `wordsToExclude`
 		var randomIndex: int = self.rng.randi_range(0, len(JsonLoader.allWords) - 1)
-		while JsonLoader.allWords[randomIndex] in excludedWords:
+		while JsonLoader.allWords[randomIndex] in wordsToExclude:
 			randomIndex = self.rng.randi_range(0, len(JsonLoader.allWords) - 1)
 
 		extraAnswers.append(JsonLoader.allWords[randomIndex])
