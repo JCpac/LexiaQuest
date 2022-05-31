@@ -1,7 +1,8 @@
-class_name Cherry extends Node2D
+class_name Present extends Node2D
 
 
 # SIGNALS
+signal opened
 signal collected
 
 # EXPORTS
@@ -12,6 +13,7 @@ export(float, 0, 10) var spriteHoverSpeed = 0.5
 onready var sprite: Sprite = $Sprite
 var spriteHoverDirection: int = 1
 
+# METHODS
 func _ready():
 	pass
 
@@ -28,12 +30,16 @@ func _spriteHoverProcess() -> void:
 	or (spriteHoverDirection == -1 and -spriteHoverLimit >= sprite.offset.y)):
 		spriteHoverDirection = -spriteHoverDirection
 
-func _on_Area2D_body_entered(_body):
+func collect() -> void:
 	$CollectSFX.play()
-	emit_signal("collected")
 	sprite.queue_free()
 	$Area2D.queue_free()
+	emit_signal("collected")
 
-
-func _on_CollectSFX_finished():
+	yield($CollectSFX, "finished")
 	queue_free()
+
+# SETTERS/GETTERS
+func _onPresentTouched(_body):
+	$OpenSFX.play()
+	emit_signal("opened")

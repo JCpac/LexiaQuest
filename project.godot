@@ -19,11 +19,6 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://UI/Button/Quiz/Button-Quiz.gd"
 }, {
-"base": "Node2D",
-"class": "Cherry",
-"language": "GDScript",
-"path": "res://collectibles/Cherry/Cherry.gd"
-}, {
 "base": "NinePatchRect",
 "class": "DialogueBox",
 "language": "GDScript",
@@ -53,6 +48,11 @@ _global_script_classes=[ {
 "class": "Player",
 "language": "GDScript",
 "path": "res://player/Player.gd"
+}, {
+"base": "Node2D",
+"class": "Present",
+"language": "GDScript",
+"path": "res://collectibles/Present/Present.gd"
 }, {
 "base": "PanelContainer",
 "class": "ScoreUI",
@@ -92,13 +92,13 @@ _global_script_classes=[ {
 _global_script_class_icons={
 "ButtonLetter": "",
 "ButtonQuiz": "",
-"Cherry": "",
 "DialogueBox": "res://addons/adbox/icon.png",
 "DustCloud": "",
 "EndScreenUI": "",
 "EndSign": "",
 "Level": "",
 "Player": "",
+"Present": "",
 "ScoreUI": "",
 "StartScreen": "",
 "StartScreenUI": "",
