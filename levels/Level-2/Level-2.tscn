@@ -33,7 +33,6 @@ levelBounds = {
 "top": -1216
 }
 hasCliff = false
-quizNodeName = "CanvasLayer/Quiz-Syllables"
 
 [node name="Background" type="TileMap" parent="."]
 tile_set = ExtResource( 4 )

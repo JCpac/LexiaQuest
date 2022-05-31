@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=2]
+[gd_scene load_steps=19 format=2]
 
 [ext_resource path="res://assets/TileSets/Foreground.tres" type="TileSet" id=1]
 [ext_resource path="res://UI/level-timer/TimerUI.tscn" type="PackedScene" id=2]
@@ -13,6 +13,7 @@
 [ext_resource path="res://UI/quizzes/quiz-hangman/Quiz-Hangman.tscn" type="PackedScene" id=11]
 [ext_resource path="res://UI/end-screen/EndScreenUI.tscn" type="PackedScene" id=12]
 [ext_resource path="res://assets/TileSets/Presents.tres" type="TileSet" id=13]
+[ext_resource path="res://UI/quizzes/syllables/Quiz-Syllables.tscn" type="PackedScene" id=14]
 [ext_resource path="res://player/Player.tscn" type="PackedScene" id=15]
 [ext_resource path="res://assets/Sound/8bit 8pack/Level 2.wav" type="AudioStream" id=16]
 [ext_resource path="res://assets/Sprites/background.png" type="Texture" id=50]
@@ -33,7 +34,6 @@ levelBounds = {
 "top": -1728
 }
 hasCliff = false
-quizNodeName = "CanvasLayer/Quiz-Hangman"
 
 [node name="Background" type="TileMap" parent="."]
 tile_set = ExtResource( 4 )
@@ -157,6 +157,9 @@ autoplay = true
 [node name="Quiz-Hangman" parent="CanvasLayer" instance=ExtResource( 11 )]
 visible = false
 
+[node name="Quiz-Syllables" parent="CanvasLayer" instance=ExtResource( 14 )]
+visible = false
+
 [node name="EndScreenUI" parent="CanvasLayer" instance=ExtResource( 12 )]
 visible = false
 
@@ -176,6 +179,7 @@ script = ExtResource( 9 )
 [connection signal="playerReached" from="Signs/EndSign" to="." method="_onPlayerReachedEndOfLevel"]
 [connection signal="died" from="Player" to="." method="_onPlayerDied"]
 [connection signal="completed" from="CanvasLayer/Quiz-Hangman" to="." method="_onQuizCompleted"]
+[connection signal="completed" from="CanvasLayer/Quiz-Syllables" to="." method="_onQuizCompleted"]
 [connection signal="backToStartScreen" from="CanvasLayer/EndScreenUI" to="." method="_onBackToStartScreen"]
 [connection signal="nextLevel" from="CanvasLayer/EndScreenUI" to="." method="_onGoToNextLevel"]
 [connection signal="restartLevel" from="CanvasLayer/EndScreenUI" to="." method="_onRestartLevel"]

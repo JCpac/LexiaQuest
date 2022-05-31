@@ -18,7 +18,6 @@ export(bool) var hasCliff = true
 export(int, 0, 2048, 32) var cliffCameraBottomBound = 1024
 export(int, 0, 100) var playerBottomBoundOffset = 40
 export(int, 30, 1800, 30) var timerStart = 300
-export(String) var quizNodeName: String = "CanvasLayer/Quiz-FourChoices"
 export(String, MULTILINE) var victoryMessage = "Chegaste ao fim do nível!"
 export(String, MULTILINE) var timeoutMessage = "Oh no! You ran out of time and died mysteriously...\nWould you like to play again?"
 export(String, MULTILINE) var fallMessage = "Essa deve ter doído...\nQueres tentar outra vez?"
@@ -30,7 +29,11 @@ onready var collectibles: Node2D = $Collectibles
 onready var scoreCounter: ScoreUI = $CanvasLayer/ScoreUI
 onready var quizCompleteTimer: Timer = $QuizCompleteTimer
 onready var endScreen: EndScreenUI = $CanvasLayer/EndScreenUI
-onready var quiz
+onready var quiz: Dictionary = {
+	matchImage = $"CanvasLayer/Quiz-FourChoices",
+	matchWord = $"CanvasLayer/Quiz-Syllables",
+	hangman = $"CanvasLayer/Quiz-Hangman"
+}
 onready var quizGenerator = $QuizGenerator
 var score: int = 0
 var paused: bool = false
@@ -50,7 +53,6 @@ func _ready():
 	setupPresentCollectibles()
 	setCameraBounds()
 	adjustSkyScale()
-	setQuizNode()
 
 func _process(_delta):
 	if paused:
@@ -93,9 +95,6 @@ func adjustSkyScale() -> void:
 
 	$ParallaxBackground/ParallaxLayer/Sky.scale = skyScale
 
-func setQuizNode() -> void:
-	quiz = get_node(quizNodeName)
-
 # Replaces all present tiles on `Collectible Tiles` tilemap with `Present` scenes.
 # Also sets-up the maximum score counter in `ScoreUI`
 # Found in https://www.reddit.com/r/godot/comments/6vg5v8/using_tilemaps_for_more_advanced_objects/dm26wy7/
@@ -134,6 +133,18 @@ func setupPresentCollectibles() -> void:
 
 	print_debug("\n", debugString % presentCount, "\n")
 
+# Called after generating quiz sets to store each quiz in a present
+func setupPresentQuizzes() -> void:
+	for present in collectibles.get_children():
+		var quiz: Dictionary = quizGenerator.getNextQuiz()
+		# If no more quizzes were generated, remove present from scene
+		if quiz.empty():
+			present.queue_free()
+			continue
+
+		# Assign next quiz to present
+		present.quiz = quiz
+
 func killPlayer() -> void:
 	timer.pause()
 	paused = true
@@ -145,10 +156,33 @@ func endLevel() -> void:
 	endScreen.visible = true
 
 # SIGNAL CALLBACKS
-func onPresentOpened(target: Present) -> void:
-	quiz.visible = true
+func onPresentOpened(present: Present) -> void:
 	player.paused = true
-	currentPresent = target
+	currentPresent = present
+
+	match present.quiz.quizType:
+		QuizGenerator.QUIZ_TYPES.MATCH_IMAGE:
+			assert(quiz.matchImage, "'Match Image' quiz was opened, but no 'Quiz-FourChoices' instance exists in scene tree")
+			quiz.matchImage.prepareQuiz(present.quiz.target, present.quiz.extraAnswers)
+			quiz.matchImage.visible = true
+
+		QuizGenerator.QUIZ_TYPES.STARTS_WITH:
+			assert(quiz.matchWord, "'Starts With' quiz was opened, but no 'Quiz-Syllables' instance exists in scene tree")
+			quiz.matchWord.prepareQuiz(present.quiz.target, present.quiz.correctAnswers, present.quiz.wrongAnswers, present.quiz.quizType)
+			quiz.matchWord.visible = true
+
+		QuizGenerator.QUIZ_TYPES.RHYMES_WITH:
+			assert(quiz.matchWord, "'Rhymes With' quiz was opened, but no 'Quiz-Syllables' instance exists in scene tree")
+			quiz.matchWord.prepareQuiz(present.quiz.target, present.quiz.correctAnswers, present.quiz.wrongAnswers, present.quiz.quizType)
+			quiz.matchWord.visible = true
+
+		QuizGenerator.QUIZ_TYPES.HANGMAN:
+			assert(quiz.hangman, "'Hangman' quiz was opened, but no 'Quiz-Hangman' instance exists in scene tree")
+			quiz.hangman.prepareQuiz(present.quiz.target, present.quiz.hiddenTarget, present.quiz.answers)
+			quiz.hangman.visible = true
+
+		_:
+			assert(false, "The value '%s' does not exist in 'QuizGenerator.QUIZ_TYPES'" % present.quiz.quizType)
 
 func _onQuizCompleted():
 	quizCompleteTimer.start()
@@ -160,8 +194,13 @@ func _onQuizCompleted():
 func onPresentCollected() -> void:
 	score += 1
 	scoreCounter.setScore(score)
-	quiz.visible = false
 	player.paused = false
+	if quiz.matchImage:
+		quiz.matchImage.visible = false
+	if quiz.matchWord:
+		quiz.matchWord.visible = false
+	if quiz.hangman:
+		quiz.hangman.visible = false
 
 func _onPlayerCrossedStartSign():
 	if not timer.isRunning():

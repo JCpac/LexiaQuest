@@ -26,9 +26,6 @@ export(Array) var debugWrongAnswers: Array = [
 	"football"
 ]
 
-# ENUMS
-enum SYLLABLES_QUIZ_TYPES {STARTS_WITH, RHYMES_WITH}
-
 # VARS
 onready var explanationLabel: RichTextLabel = $QuizArea/VBoxContainer/Exercise/Explanation
 onready var targetLabel: RichTextLabel = $QuizArea/VBoxContainer/Exercise/Target
@@ -42,7 +39,7 @@ func _init():
 func _ready():
 	# If the quiz scene itself is played, automatically use debug values
 	if OS.is_debug_build() and get_parent() == get_tree().root:
-		prepareQuiz(debugTarget, debugCorrectAnswers, debugWrongAnswers, SYLLABLES_QUIZ_TYPES.STARTS_WITH)
+		prepareQuiz(debugTarget, debugCorrectAnswers, debugWrongAnswers, QuizGenerator.QUIZ_TYPES.STARTS_WITH)
 
 # Assigns the quiz with a target word part and several possible answers
 # Generates the quiz UI based on the provided values
@@ -56,10 +53,10 @@ func prepareQuiz(targetWordPart: String, correctAnswers: Array, wrongAnswers: Ar
 
 	# Set explanation label's content
 	match quizType:
-		SYLLABLES_QUIZ_TYPES.STARTS_WITH:
+		QuizGenerator.QUIZ_TYPES.STARTS_WITH:
 			self.explanationLabel.bbcode_text = "[center]%s[/center]" % self.startsWithText
 
-		SYLLABLES_QUIZ_TYPES.RHYMES_WITH:
+		QuizGenerator.QUIZ_TYPES.RHYMES_WITH:
 			self.explanationLabel.bbcode_text = "[center]%s[/center]" % self.rhymesWithText
 
 		_:

@@ -12,6 +12,7 @@ export(float, 0, 10) var spriteHoverSpeed = 0.5
 # VARS
 onready var sprite: Sprite = $Sprite
 var spriteHoverDirection: int = 1
+var quiz: Dictionary = {}
 
 # METHODS
 func _ready():
