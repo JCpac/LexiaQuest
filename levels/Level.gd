@@ -148,7 +148,7 @@ func _onPlayerReachedEndOfLevel():
 	timer.pause()
 	paused = true
 	endScreen.message = victoryMessage
-	endScreen.showNextLevelButton = true
+	endScreen.showNextLevelButton = true if self.nextLevelPath else false
 	endLevel()
 
 func _onGoToNextLevel() -> void:
