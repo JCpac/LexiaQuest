@@ -25,13 +25,14 @@ script = ExtResource( 5 )
 __meta__ = {
 "_edit_lock_": true
 }
+nextLevelPath = "res://levels/Level-3/Level-3.tscn"
 levelBounds = {
 "bottom": 320,
 "left": -128,
 "right": 2496,
 "top": -1216
 }
-cliffCameraBottomBound = 320
+hasCliff = false
 
 [node name="Background" type="TileMap" parent="."]
 tile_set = ExtResource( 4 )

@@ -25,13 +25,14 @@ script = ExtResource( 5 )
 __meta__ = {
 "_edit_lock_": true
 }
+nextLevelPath = ""
 levelBounds = {
 "bottom": 64,
 "left": -128,
 "right": 2816,
 "top": -1728
 }
-cliffCameraBottomBound = 64
+hasCliff = false
 
 [node name="Background" type="TileMap" parent="."]
 tile_set = ExtResource( 4 )
