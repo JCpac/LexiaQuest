@@ -3,23 +3,24 @@ class_name Level extends Node2D
 
 # PRELOADS & CONSTS
 const presentScene: PackedScene = preload("res://collectibles/Cherry/Cherry.tscn")
-const EndScreenUIScene: PackedScene = preload("res://UI/end-screen/EndScreenUI.tscn")
 
 const DB_PATH: String = "res://assets/Database/db.json"
 
 # EXPORTS
+export(String) var nextLevelPath: String = "res://levels/Level-2/Level-2.tscn"
 export var levelBounds: Dictionary = {
 	"top": -440,
 	"right": 8568,
 	"bottom": 2944,
 	"left": -384
 }
+export(bool) var hasCliff = true
 export(int, 0, 2048, 32) var cliffCameraBottomBound = 1024
 export(int, 0, 100) var playerBottomBoundOffset = 40
 export(int, 30, 1800, 30) var timerStart = 300
-export(String, MULTILINE) var victoryMessage = "Congratulations! You escaped the cave!\nWould you like to play again?"
+export(String, MULTILINE) var victoryMessage = "Chegaste ao fim do nível!"
 export(String, MULTILINE) var timeoutMessage = "Oh no! You ran out of time and died mysteriously...\nWould you like to play again?"
-export(String, MULTILINE) var fallMessage = "Ouch! That must've hurt. Why would you jump off the cliff like that!?\nWould you like to play again?"
+export(String, MULTILINE) var fallMessage = "Essa deve ter doído...\nQueres tentar outra vez?"
 
 # VARS
 onready var player: Player = $Player
@@ -27,9 +28,8 @@ onready var timer: TimerUI = $CanvasLayer/TimerUI
 onready var collectibles: Node2D = $Collectibles
 onready var scoreCounter: ScoreUI = $CanvasLayer/ScoreUI
 onready var quizCompleteTimer: Timer = $QuizCompleteTimer
-var dbContents: Array
+onready var endScreen: EndScreenUI = $CanvasLayer/EndScreenUI
 var score: int = 0
-var endScreenMessage: String = "Your message here..."
 var paused: bool = false
 var currentLevelBounds: Dictionary
 
@@ -38,12 +38,11 @@ func _enter_tree():
 	currentLevelBounds = {
 		"top": levelBounds.top,
 		"right": levelBounds.right,
-		"bottom": cliffCameraBottomBound,
+		"bottom": cliffCameraBottomBound if hasCliff else levelBounds.bottom,
 		"left": levelBounds.left
 	}
 
 func _ready():
-	# loadDbContents()
 	setupPresentCollectibles()
 	setCameraBounds()
 	adjustSkyScale()
@@ -53,19 +52,6 @@ func _process(_delta):
 		return
 
 	lockPlayerInLevelBounds()
-
-# Unused for now; will load JSON DB contents
-func loadDbContents() -> void:
-	# File handling and JSON parsing
-	var dbFile: File = File.new()
-	dbFile.open(DB_PATH, File.READ)
-	var content: JSONParseResult = JSON.parse(dbFile.get_as_text())
-	dbFile.close()
-
-	# Expect JSON to have array as top-level element
-	dbContents = content.result #if typeof(content.result) == TYPE_ARRAY else null
-
-	print_debug("DB contents (%s):\n" % len(dbContents), dbContents)
 
 func setCameraBounds() -> void:
 	var camera: Camera2D = player.get_node("PlayerCamera")
@@ -88,7 +74,8 @@ func lockPlayerInLevelBounds() -> void:
 
 	# Player fell off level bounds
 	if player.position.y + playerExtents.y > currentLevelBounds.bottom + playerBottomBoundOffset:
-		endScreenMessage = fallMessage
+		endScreen.message = fallMessage
+		endScreen.showNextLevelButton = false
 		killPlayer()
 
 func adjustSkyScale() -> void:
@@ -111,59 +98,78 @@ func setupPresentCollectibles() -> void:
 
 	# Get tilemap information
 	var tileMap: TileMap = $"Collectible Tiles"
-	var cellSizeX: float = tileMap.get_cell_size().x
-	var cellSizeY: float = tileMap.get_cell_size().y
-	var tileSet: TileSet = tileMap.get_tileset()
+	var cellSize: Vector2 = tileMap.get_cell_size()
 	var usedCells: Array = tileMap.get_used_cells()
 
 	# Iterate over tilemap to find and replace present tiles
 	for position in usedCells:
-		var id: int = tileMap.get_cell(position.x, position.y)
-		var name: String = tileSet.tile_get_name(id)
-		if name == "Present-Closed.png 0":
-			# Create and place present entity on tilemap position
-			var node = presentScene.instance()
-			node.position = Vector2( position.x * cellSizeX + (0.5*cellSizeX), position.y * cellSizeY + (0.5*cellSizeY))
-			collectibles.add_child(node)
+		# Create and place present instance on tile position
+		# Tile positions are cell-based, so must multiply by cell size to get positions in the scene
+		# Tile positions in the scene are top-left-corner-based and present positions are centered,
+		# so must add half the cell size on each axis when placing presents on tiles
+		var node = presentScene.instance()
+		node.position = Vector2( position.x * cellSize.x + (0.5*cellSize.x), position.y * cellSize.y + (0.5*cellSize.y))
+		collectibles.add_child(node)
 
-			# Remove present tile from tilemap
-			tileMap.set_cell(position.x, position.y, -1)
+		# Remove present tile from tilemap
+		tileMap.set_cell(position.x, position.y, -1)
 
-			# Setup signal
-			node.connect("collected", self, "onPresentCollected")
+		# Setup signal
+		node.connect("collected", self, "onPresentCollected")
 
-			presentCount += 1
+		presentCount += 1
 
-			debugString += "(%s, %s) " % [node.position.x, node.position.y]
+		debugString += "(%s, %s) " % [node.position.x, node.position.y]
 
 	scoreCounter.setMaxScore(presentCount)
 
 	print_debug("\n", debugString % presentCount, "\n")
 
+func killPlayer() -> void:
+	timer.pause()
+	paused = true
+	player.kill()
+
+func endLevel() -> void:
+	player.paused = true
+	endScreen.enabled = true
+	endScreen.visible = true
+
+# SIGNAL CALLBACKS
 func onPresentCollected() -> void:
 	score += 1
 	scoreCounter.setScore(score)
 
-func _on_StartSign_playerHasCrossed():
+func _onPlayerCrossedStartSign():
 	if not timer.isRunning():
 		timer.start(timerStart)
 
-func _on_EndSign_playerReached():
+func _onPlayerReachedEndOfLevel():
 	timer.pause()
 	paused = true
-	endScreenMessage = victoryMessage
-	endGame()
+	endScreen.message = victoryMessage
+	endScreen.showNextLevelButton = true
+	endLevel()
 
-func onRestartGame() -> void:
-	var code: int = get_tree().reload_current_scene()
+func _onGoToNextLevel() -> void:
+	var code: int = get_tree().change_scene(nextLevelPath)
 
 	if OK != code:
-		var error: String = "Can't open resource path for Level_1" if ERR_CANT_OPEN else "Couldn't instantiate Level_1 scene"
+		var error: String = "Can't open resource path for next level" if ERR_CANT_OPEN else "Couldn't instantiate next level scene"
 		push_error(error)
 		print_stack()
 		get_tree().quit()
 
-func onBackToStartScreen() -> void:
+func _onRestartLevel() -> void:
+	var code: int = get_tree().reload_current_scene()
+
+	if OK != code:
+		var error: String = "Can't open resource path for current level" if ERR_CANT_OPEN else "Couldn't instantiate current level scene"
+		push_error(error)
+		print_stack()
+		get_tree().quit()
+
+func _onBackToStartScreen() -> void:
 	var code: int = get_tree().change_scene("res://levels/StartScreen/StartScreen.tscn")
 
 	if OK != code:
@@ -172,30 +178,16 @@ func onBackToStartScreen() -> void:
 		print_stack()
 		get_tree().quit()
 
-func _on_TimerUI_timeout():
-	endScreenMessage = timeoutMessage
+func _onTimerTimeout():
+	endScreen.message = timeoutMessage
+	endScreen.showNextLevelButton = false
 	killPlayer()
 
-func killPlayer() -> void:
-	timer.pause()
-	paused = true
-	player.kill()
-
-func _on_Player_died():
-	endGame()
-
-func endGame() -> void:
-	player.paused = true
-
-	var endScreen = EndScreenUIScene.instance()
-	endScreen.enabled = true
-	endScreen.text = endScreenMessage
-	endScreen.connect("restartGame", self, "onRestartGame")
-	endScreen.connect("backToStartScreen", self, "onBackToStartScreen")
-	$CanvasLayer.add_child(endScreen)
+func _onPlayerDied():
+	endLevel()
 
 # Determines if player is in cliff area or not and adjusts level bounds accordingly
-func _on_Entrance_body_exited(body):
+func _onPlayerExitedEntrance(body):
 	var entrance: Area2D = $Entrance
 	if body.position.x < entrance.position.x:
 		currentLevelBounds.bottom = cliffCameraBottomBound
