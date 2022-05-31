@@ -3,6 +3,6 @@ extends Level
 
 # METHODS
 func _ready():
-	quizGenerator.clearQuizSets()
-	quizGenerator.generateMatchImageQuizSet()
+	QuizGenerator.clearQuizSets()
+	QuizGenerator.generateMatchImageQuizSet()
 	setupPresentQuizzes()

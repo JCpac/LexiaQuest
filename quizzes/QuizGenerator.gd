@@ -1,4 +1,4 @@
-class_name QuizGenerator extends Node
+extends Node
 
 
 # CONSTS
@@ -23,6 +23,16 @@ func clearQuizSets() -> void:
 # Randomize generated quiz sets
 func randomizeQuizSets() -> void:
 	_quizSet.shuffle()
+
+# Gets the next quiz in the last generated set of quizzes
+# Quiz sets can be generated with `generateMatchImageQuizSet()`, `generateStartsWithQuizSet()`, `generateRhymesQuizSet()` and `generateHangmanQuizSet()`
+# Returns an empty `Dictionary` if no quizzes have been generated or the last set of quizzes has been exhausted
+# If quizzes of multiple types have been generated, they can be distinguished with the property `quizType` (`QuizGenerator.QUIZ_TYPES`)
+func getNextQuiz() -> Dictionary:
+	if not len(_quizSet):
+		return {}
+
+	return _quizSet.pop_front()
 
 # Generate a random set of "Match Image" quizzes. Each quiz can be retrieved by calling `getNextQuiz()`
 # These quizzes are `Dictionaries` with the properties:
@@ -234,13 +244,3 @@ func _getExtraRandomWords(numOfExtraWords: int, wordsToExclude: Array) -> Array:
 		extraAnswers.append(JsonLoader.allWords[randomIndex])
 
 	return extraAnswers
-
-# Gets the next quiz in the last generated set of quizzes
-# Quiz sets can be generated with `generateMatchImageQuizSet()`, `generateStartsWithQuizSet()`, `generateRhymesQuizSet()` and `generateHangmanQuizSet()`
-# Returns an empty `Dictionary` if no quizzes have been generated or the last set of quizzes has been exhausted
-# If quizzes of multiple types have been generated, they can be distinguished with the property `quizType` (`QuizGenerator.QUIZ_TYPES`)
-func getNextQuiz() -> Dictionary:
-	if not len(_quizSet):
-		return {}
-
-	return _quizSet.pop_front()

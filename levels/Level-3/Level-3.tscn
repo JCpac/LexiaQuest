@@ -8,7 +8,6 @@
 [ext_resource path="res://UI/level-score/ScoreUI.tscn" type="PackedScene" id=6]
 [ext_resource path="res://levels/Level_1/Signs/StartSign/StartSign.tscn" type="PackedScene" id=7]
 [ext_resource path="res://levels/Level_1/Signs/EndSign/EndSign.tscn" type="PackedScene" id=8]
-[ext_resource path="res://quizzes/QuizGenerator.gd" type="Script" id=9]
 [ext_resource path="res://assets/TileSets/Bridges.tres" type="TileSet" id=10]
 [ext_resource path="res://UI/quizzes/quiz-hangman/Quiz-Hangman.tscn" type="PackedScene" id=11]
 [ext_resource path="res://UI/end-screen/EndScreenUI.tscn" type="PackedScene" id=12]
@@ -170,9 +169,6 @@ visible = false
 [node name="QuizCompleteTimer" type="Timer" parent="."]
 wait_time = 2.0
 one_shot = true
-
-[node name="QuizGenerator" type="Node" parent="."]
-script = ExtResource( 9 )
 
 [connection signal="body_exited" from="Entrance" to="." method="_onPlayerExitedEntrance"]
 [connection signal="playerHasCrossed" from="Signs/StartSign" to="." method="_onPlayerCrossedStartSign"]

@@ -34,7 +34,6 @@ onready var quiz: Dictionary = {
 	matchWord = $"CanvasLayer/Quiz-Syllables",
 	hangman = $"CanvasLayer/Quiz-Hangman"
 }
-onready var quizGenerator = $QuizGenerator
 var score: int = 0
 var paused: bool = false
 var currentLevelBounds: Dictionary
@@ -136,7 +135,7 @@ func setupPresentCollectibles() -> void:
 # Called after generating quiz sets to store each quiz in a present
 func setupPresentQuizzes() -> void:
 	for present in collectibles.get_children():
-		var quiz: Dictionary = quizGenerator.getNextQuiz()
+		var quiz: Dictionary = QuizGenerator.getNextQuiz()
 		# If no more quizzes were generated, remove present from scene
 		if quiz.empty():
 			present.queue_free()

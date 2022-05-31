@@ -54,11 +54,6 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://collectibles/Present/Present.gd"
 }, {
-"base": "Node",
-"class": "QuizGenerator",
-"language": "GDScript",
-"path": "res://quizzes/QuizGenerator.gd"
-}, {
 "base": "PanelContainer",
 "class": "ScoreUI",
 "language": "GDScript",
@@ -104,7 +99,6 @@ _global_script_class_icons={
 "Level": "",
 "Player": "",
 "Present": "",
-"QuizGenerator": "",
 "ScoreUI": "",
 "StartScreen": "",
 "StartScreenUI": "",
@@ -123,6 +117,7 @@ config/icon="res://icon.png"
 [autoload]
 
 JsonLoader="*res://db/JsonLoader.gd"
+QuizGenerator="*res://quizzes/QuizGenerator.gd"
 
 [display]
 
