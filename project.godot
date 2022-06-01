@@ -113,6 +113,7 @@ _global_script_class_icons={
 config/name="Dyslexia Platformer Project"
 run/main_scene="res://levels/StartScreen/StartScreen.tscn"
 config/icon="res://assets/Tchad/Base Art/Tchad_Base.png"
+config/windows_native_icon="res://icon.ico"
 
 [autoload]
 
