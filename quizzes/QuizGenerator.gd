@@ -40,8 +40,8 @@ func getNextQuiz() -> Dictionary:
 # - `target` (`String`)
 # - `extraAnswers` (`Array` of `Strings`)
 func generateMatchImageQuizSet() -> void:
-	JsonLoader.matchImageWords.shuffle()
-	for wordSet in JsonLoader.matchImageWords:
+	MatchImageDB.words.shuffle()
+	for wordSet in MatchImageDB.words:
 		# Setup dictionary structure
 		var quizDictionary: Dictionary = {}
 		quizDictionary.quizType = QUIZ_TYPES.MATCH_IMAGE
@@ -67,8 +67,8 @@ func generateMatchImageQuizSet() -> void:
 # - `wrongAnswers` (`Array` of `Strings`)
 # Each quiz generates with a total of `numOfCorrectAnswersPerQuiz + numOfWrongAnswersPerQuiz` answers
 func generateStartsWithQuizSet(numOfCorrectAnswersPerQuiz: int, numOfWrongAnswersPerQuiz: int) -> void:
-	JsonLoader.startsWithWords.shuffle()
-	for wordSet in JsonLoader.startsWithWords:
+	StartsWithDB.words.shuffle()
+	for wordSet in StartsWithDB.words:
 		# Setup dictionary structure
 		var quizDictionary: Dictionary = {}
 		quizDictionary.quizType = QUIZ_TYPES.STARTS_WITH
@@ -77,10 +77,10 @@ func generateStartsWithQuizSet(numOfCorrectAnswersPerQuiz: int, numOfWrongAnswer
 		quizDictionary.wrongAnswers = []
 
 		# Set target word part
-		quizDictionary.target = wordSet[JsonLoader.STARTS_WITH_SYLLABLE_PROP]
+		quizDictionary.target = wordSet[StartsWithDB.TARGET_PROP]
 
 		# Duplicate correct answers array and pick random correct answers
-		var correctAnswers: Array = wordSet[JsonLoader.STARTS_WITH_WORDS_PROP].duplicate()
+		var correctAnswers: Array = wordSet[StartsWithDB.WORDS_PROP].duplicate()
 		var smallestNumOfCorrectAnswers: int = len(correctAnswers) if len(correctAnswers) < numOfCorrectAnswersPerQuiz else numOfCorrectAnswersPerQuiz
 		correctAnswers.shuffle()
 		for i in range(smallestNumOfCorrectAnswers):
@@ -117,8 +117,8 @@ func generateStartsWithQuizSet(numOfCorrectAnswersPerQuiz: int, numOfWrongAnswer
 # - `wrongAnswers` (`Array` of `Strings`)
 # Each quiz generates with a total of `numOfCorrectAnswersPerQuiz + numOfWrongAnswersPerQuiz` answers
 func generateRhymesWithQuizSet(numOfCorrectAnswersPerQuiz: int, numOfWrongAnswersPerQuiz: int) -> void:
-	JsonLoader.rhymesWithWords.shuffle()
-	for wordSet in JsonLoader.rhymesWithWords:
+	RhymesWithDB.words.shuffle()
+	for wordSet in RhymesWithDB.words:
 		# Setup dictionary structure
 		var quizDictionary: Dictionary = {}
 		quizDictionary.quizType = QUIZ_TYPES.RHYMES_WITH
@@ -161,8 +161,8 @@ func generateHangmanQuizSet(ratioOfHintCharsPerQuiz: float) -> void:
 	# Restrict `ratioOfHintCharsPerQuiz`
 	ratioOfHintCharsPerQuiz = clamp(ratioOfHintCharsPerQuiz, 0, HANGMAN_MAX_HINT_CHAR_RATIO)
 
-	JsonLoader.matchImageWords.shuffle()
-	for wordSet in JsonLoader.matchImageWords:
+	MatchImageDB.words.shuffle()
+	for wordSet in MatchImageDB.words:
 		# Setup dictionary structure
 		var quizDictionary: Dictionary = {}
 		quizDictionary.quizType = QUIZ_TYPES.HANGMAN
@@ -238,10 +238,10 @@ func _getExtraRandomWords(numOfExtraWords: int, wordsToExclude: Array) -> Array:
 
 	while len(extraAnswers) < numOfExtraWords:
 		# Keep picking random words until the picked word does not exist in `wordsToExclude`
-		var randomIndex: int = _rng.randi_range(0, len(JsonLoader.allWords) - 1)
-		while JsonLoader.allWords[randomIndex] in wordsToExclude:
-			randomIndex = _rng.randi_range(0, len(JsonLoader.allWords) - 1)
+		var randomIndex: int = _rng.randi_range(0, len(AllDB.words) - 1)
+		while AllDB.words[randomIndex] in wordsToExclude:
+			randomIndex = _rng.randi_range(0, len(AllDB.words) - 1)
 
-		extraAnswers.append(JsonLoader.allWords[randomIndex])
+		extraAnswers.append(AllDB.words[randomIndex])
 
 	return extraAnswers

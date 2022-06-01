@@ -1,5 +1,11 @@
-[
-    {
+extends Node
+
+
+const TARGET_PROP: String = "start"
+const WORDS_PROP: String = "words"
+
+const words: Array = [
+	{
         "start": "fa",
         "words": [
             "family",

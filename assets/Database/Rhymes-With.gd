@@ -1,5 +1,8 @@
-[
-    [
+extends Node
+
+
+const words: Array = [
+	[
         "ball",
         "tall",
         "call",
