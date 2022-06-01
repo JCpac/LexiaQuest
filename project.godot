@@ -74,6 +74,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://levels/Signs/StartSign/StartSign.gd"
 }, {
+"base": "Node",
+"class": "TimerCountUp",
+"language": "GDScript",
+"path": "res://timer/Timer-CountUp.gd"
+}, {
 "base": "PanelContainer",
 "class": "TimerUI",
 "language": "GDScript",
@@ -98,6 +103,7 @@ _global_script_class_icons={
 "StartScreen": "",
 "StartScreenUI": "",
 "StartSign": "",
+"TimerCountUp": "",
 "TimerUI": "",
 "WallSlidingDetector": ""
 }

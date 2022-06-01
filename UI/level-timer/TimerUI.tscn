@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://UI/level-timer/TimerUI.gd" type="Script" id=1]
+[ext_resource path="res://timer/Timer-CountUp.gd" type="Script" id=2]
 
 [node name="TimerUI" type="PanelContainer"]
 anchor_left = 0.5
@@ -28,7 +29,5 @@ text = "0:00"
 align = 1
 valign = 1
 
-[node name="Timer" type="Timer" parent="."]
-one_shot = true
-
-[connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
+[node name="TimerCountUp" type="Node" parent="."]
+script = ExtResource( 2 )

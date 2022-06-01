@@ -15,7 +15,6 @@ export var _levelBounds: Dictionary = {
 export(bool) var _hasCliff = true
 export(int, 0, 2048, 32) var _cliffCameraBottomBound = 1024
 export(int, 0, 100) var _playerBottomBoundOffset = 40
-export(int, 30, 1800, 30) var _timerStart = 300
 export(String, MULTILINE) var _victoryMessage = "Chegaste ao fim do nível!"
 export(String, MULTILINE) var _timeoutMessage = "Oh no! You ran out of time and died mysteriously...\nWould you like to play again?"
 export(String, MULTILINE) var _fallMessage = "Essa deve ter doído...\nQueres tentar outra vez?"
@@ -156,7 +155,7 @@ func _onPresentCollected() -> void:
 
 func _onPlayerCrossedStartSign():
 	if not _timer.isRunning():
-		_timer.start(_timerStart)
+		_timer.start()
 
 func _onPlayerReachedEndOfLevel():
 	_timer.paused = true

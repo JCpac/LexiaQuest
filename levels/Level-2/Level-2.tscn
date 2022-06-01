@@ -165,4 +165,3 @@ visible = false
 [connection signal="backToStartScreen" from="CanvasLayer/EndScreenUI" to="." method="_onBackToStartScreen"]
 [connection signal="nextLevel" from="CanvasLayer/EndScreenUI" to="." method="_onGoToNextLevel"]
 [connection signal="restartLevel" from="CanvasLayer/EndScreenUI" to="." method="_onRestartLevel"]
-[connection signal="timeout" from="CanvasLayer/TimerUI" to="." method="_onTimerTimeout"]
