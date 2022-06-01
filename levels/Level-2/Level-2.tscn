@@ -15,6 +15,7 @@
 [ext_resource path="res://assets/Sound/8bit 8pack/Level 2.wav" type="AudioStream" id=16]
 [ext_resource path="res://assets/Sprites/background.png" type="Texture" id=50]
 
+
 [sub_resource type="RectangleShape2D" id=24]
 extents = Vector2( 8, 32 )
 

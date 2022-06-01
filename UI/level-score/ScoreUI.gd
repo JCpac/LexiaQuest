@@ -12,7 +12,7 @@ func _setMaxScore(maxScoreValue: int) -> void:
 		maxScoreValue = 0
 
 	maxScore = maxScoreValue
-	
+
 	if score > maxScore:
 		self.score = maxScore
 	_label.text = _updateLabel()

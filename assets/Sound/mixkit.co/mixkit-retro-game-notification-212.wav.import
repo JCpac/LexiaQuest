@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/mixkit-retro-game-notification-212.wav-dc9e2e66180e5044a165d929551a399d.sample"
+
+[deps]
+
+source_file="res://assets/Sound/mixkit.co/mixkit-retro-game-notification-212.wav"
+dest_files=[ "res://.import/mixkit-retro-game-notification-212.wav-dc9e2e66180e5044a165d929551a399d.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=true
+edit/normalize=false
+edit/loop=false
+compress/mode=0

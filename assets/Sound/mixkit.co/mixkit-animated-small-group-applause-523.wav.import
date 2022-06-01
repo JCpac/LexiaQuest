@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/mixkit-animated-small-group-applause-523.wav-e5ba0a59e560346ddeda0543b59fd86a.sample"
+
+[deps]
+
+source_file="res://assets/Sound/mixkit.co/mixkit-animated-small-group-applause-523.wav"
+dest_files=[ "res://.import/mixkit-animated-small-group-applause-523.wav-e5ba0a59e560346ddeda0543b59fd86a.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=true
+edit/normalize=false
+edit/loop=false
+compress/mode=0
