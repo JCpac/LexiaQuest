@@ -129,6 +129,7 @@ func generateRhymesWithQuizSet(numOfCorrectAnswersPerQuiz: int, numOfWrongAnswer
 		# Duplicate correct answers array,
 		# set random correct word as target and remove it from the array
 		var correctAnswers: Array = wordSet.duplicate()
+		var wordsToExclude: Array = correctAnswers.duplicate()
 		correctAnswers.shuffle()
 		quizDictionary.target = correctAnswers.pop_front()
 
@@ -138,7 +139,7 @@ func generateRhymesWithQuizSet(numOfCorrectAnswersPerQuiz: int, numOfWrongAnswer
 			quizDictionary.correctAnswers.append(correctAnswers[i])
 
 		# Pick random wrong answers
-		quizDictionary.wrongAnswers = _getExtraRandomWords(numOfWrongAnswersPerQuiz, correctAnswers)
+		quizDictionary.wrongAnswers = _getExtraRandomWords(numOfWrongAnswersPerQuiz, wordsToExclude)
 
 		_quizSet.append(quizDictionary)
 
