@@ -1,25 +1,34 @@
 class_name ScoreUI extends PanelContainer
 
 # VARS
-onready var label: Label = $Label
-var maxScore: int = 0
+var maxScore: int = 0 setget _setMaxScore
+var score: int = 0 setget _setScore
 
-func _ready():
-	pass
+onready var _label: Label = $Label
 
-func setMaxScore(maximumScore: int) -> void:
-	maxScore = maximumScore
-	label.text = _formatScoreLabel(0, maxScore)
+# METHODS
+func _setMaxScore(maxScoreValue: int) -> void:
+	if maxScoreValue < 0:
+		maxScoreValue = 0
 
-func setScore(score: int) -> void:
+	maxScore = maxScoreValue
+	
 	if score > maxScore:
-		push_error("Setting overflowed score (%s/%s) in ScoreUI")
-		print_stack()
-	else:
-		label.text = _formatScoreLabel(score, maxScore)
+		self.score = maxScore
+	_label.text = _updateLabel()
 
-func _formatScoreLabel(score: int, maximumScore) -> String:
+func _setScore(scoreValue: int) -> void:
+	if scoreValue < 0:
+		scoreValue = 0
+	elif scoreValue > maxScore:
+		scoreValue = maxScore
+
+	score = scoreValue
+
+	_label.text = _updateLabel()
+
+func _updateLabel() -> String:
 	var result: String = "x "
 	result += "0%s" % score if score < 10 else "%s" % score
-	result += "/0%s" % maximumScore if maximumScore < 10 else "/%s" % maximumScore
+	result += "/0%s" % maxScore if maxScore < 10 else "/%s" % maxScore
 	return result

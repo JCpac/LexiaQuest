@@ -1,90 +1,81 @@
 class_name Level extends Node2D
 
 
-# PRELOADS & CONSTS
-const presentScene: PackedScene = preload("res://collectibles/Present/Present.tscn")
-
-const DB_PATH: String = "res://assets/Database/db.json"
+# PRELOADS
+const _presentScene: PackedScene = preload("res://collectibles/Present/Present.tscn")
 
 # EXPORTS
-export(String) var nextLevelPath: String = "res://levels/Level-2/Level-2.tscn"
-export var levelBounds: Dictionary = {
+export(String) var _nextLevelPath: String = "res://levels/Level-2/Level-2.tscn"
+export var _levelBounds: Dictionary = {
 	"top": -440,
 	"right": 8568,
 	"bottom": 2944,
 	"left": -384
 }
-export(bool) var hasCliff = true
-export(int, 0, 2048, 32) var cliffCameraBottomBound = 1024
-export(int, 0, 100) var playerBottomBoundOffset = 40
-export(int, 30, 1800, 30) var timerStart = 300
-export(String, MULTILINE) var victoryMessage = "Chegaste ao fim do nível!"
-export(String, MULTILINE) var timeoutMessage = "Oh no! You ran out of time and died mysteriously...\nWould you like to play again?"
-export(String, MULTILINE) var fallMessage = "Essa deve ter doído...\nQueres tentar outra vez?"
+export(bool) var _hasCliff = true
+export(int, 0, 2048, 32) var _cliffCameraBottomBound = 1024
+export(int, 0, 100) var _playerBottomBoundOffset = 40
+export(int, 30, 1800, 30) var _timerStart = 300
+export(String, MULTILINE) var _victoryMessage = "Chegaste ao fim do nível!"
+export(String, MULTILINE) var _timeoutMessage = "Oh no! You ran out of time and died mysteriously...\nWould you like to play again?"
+export(String, MULTILINE) var _fallMessage = "Essa deve ter doído...\nQueres tentar outra vez?"
 
 # VARS
-onready var player: Player = $Player
-onready var timer: TimerUI = $CanvasLayer/TimerUI
-onready var collectibles: Node2D = $Collectibles
-onready var scoreCounter: ScoreUI = $CanvasLayer/ScoreUI
-onready var quizCompleteTimer: Timer = $QuizCompleteTimer
-onready var endScreen: EndScreenUI = $CanvasLayer/EndScreenUI
-onready var quiz: Dictionary = {
-	matchImage = $"CanvasLayer/Quiz-FourChoices",
-	matchWord = $"CanvasLayer/Quiz-Syllables",
-	hangman = $"CanvasLayer/Quiz-Hangman"
-}
-var score: int = 0
-var paused: bool = false
-var currentLevelBounds: Dictionary
-var currentPresent: Present
+onready var _player: Player = $Player
+onready var _timer: TimerUI = $CanvasLayer/TimerUI
+onready var _collectibles: Node2D = $Collectibles
+onready var _scoreCounter: ScoreUI = $CanvasLayer/ScoreUI
+onready var _endScreen: EndScreenUI = $CanvasLayer/EndScreenUI
+var _score: int = 0
+var _paused: bool = false
+var _currentLevelBounds: Dictionary
 
 # METHODS
 func _enter_tree():
-	currentLevelBounds = {
-		"top": levelBounds.top,
-		"right": levelBounds.right,
-		"bottom": cliffCameraBottomBound if hasCliff else levelBounds.bottom,
-		"left": levelBounds.left
+	_currentLevelBounds = {
+		"top": _levelBounds.top,
+		"right": _levelBounds.right,
+		"bottom": _cliffCameraBottomBound if _hasCliff else _levelBounds.bottom,
+		"left": _levelBounds.left
 	}
 
 func _ready():
-	setupPresentCollectibles()
-	setCameraBounds()
-	adjustSkyScale()
+	_setupPresentCollectibles()
+	_setCameraBounds()
+	_adjustSkyScale()
 
 func _process(_delta):
-	if paused:
+	if _paused:
 		return
 
-	lockPlayerInLevelBounds()
+	_lockPlayerInLevelBounds()
 
-func setCameraBounds() -> void:
-	var camera: Camera2D = player.get_node("PlayerCamera")
-	camera.limit_top = currentLevelBounds.top
-	camera.limit_right = currentLevelBounds.right
-	camera.limit_bottom = currentLevelBounds.bottom
-	camera.limit_left = currentLevelBounds.left
+func _setCameraBounds() -> void:
+	var camera: Camera2D = _player.get_node("PlayerCamera")
+	camera.limit_top = _currentLevelBounds.top
+	camera.limit_right = _currentLevelBounds.right
+	camera.limit_bottom = _currentLevelBounds.bottom
+	camera.limit_left = _currentLevelBounds.left
 
-func lockPlayerInLevelBounds() -> void:
-	var playerExtents: Vector2 = (player.get_node("CollisionShape2D").shape as RectangleShape2D).extents
-	if player.position.y - playerExtents.y < currentLevelBounds.top:
-		player.position.y = currentLevelBounds.top + playerExtents.y
-		player.velocity.y = 0
-	if player.position.x - playerExtents.x < currentLevelBounds.left:
-		player.position.x = currentLevelBounds.left + playerExtents.x
-		player.velocity.x = 0
-	if player.position.x + playerExtents.x > currentLevelBounds.right:
-		player.position.x = currentLevelBounds.right - playerExtents.x
-		player.velocity.x = 0
+func _lockPlayerInLevelBounds() -> void:
+	var playerExtents: Vector2 = (_player.get_node("CollisionShape2D").shape as RectangleShape2D).extents
+	if _player.position.y - playerExtents.y < _currentLevelBounds.top:
+		_player.position.y = _currentLevelBounds.top + playerExtents.y
+		_player.velocity.y = 0
+	if _player.position.x - playerExtents.x < _currentLevelBounds.left:
+		_player.position.x = _currentLevelBounds.left + playerExtents.x
+		_player.velocity.x = 0
+	if _player.position.x + playerExtents.x > _currentLevelBounds.right:
+		_player.position.x = _currentLevelBounds.right - playerExtents.x
+		_player.velocity.x = 0
 
 	# Player fell off level bounds
-	if player.position.y + playerExtents.y > currentLevelBounds.bottom + playerBottomBoundOffset:
-		endScreen.message = fallMessage
-		endScreen.showNextLevelButton = false
-		killPlayer()
+	if _player.position.y + playerExtents.y > _currentLevelBounds.bottom + _playerBottomBoundOffset:
+		_endScreen.message = _fallMessage
+		_endScreen.showNextLevelButton = false
+		_killPlayer()
 
-func adjustSkyScale() -> void:
+func _adjustSkyScale() -> void:
 	# With a no-zoom viewport, sky bg fits nicely into the viewport at a 0.8 scale
 	var noCameraZoomScale: Vector2 = Vector2(0.8, 0.8)
 
@@ -97,7 +88,7 @@ func adjustSkyScale() -> void:
 # Replaces all present tiles on `Collectible Tiles` tilemap with `Present` scenes.
 # Also sets-up the maximum score counter in `ScoreUI`
 # Found in https://www.reddit.com/r/godot/comments/6vg5v8/using_tilemaps_for_more_advanced_objects/dm26wy7/
-func setupPresentCollectibles() -> void:
+func _setupPresentCollectibles() -> void:
 	var debugString: String = "Replaced %s present tiles at the following positions:\n"
 
 	var presentCount: int = 0
@@ -113,28 +104,28 @@ func setupPresentCollectibles() -> void:
 		# Tile positions are cell-based, so must multiply by cell size to get positions in the scene
 		# Tile positions in the scene are top-left-corner-based and present positions are centered,
 		# so must add half the cell size on each axis when placing presents on tiles
-		var node = presentScene.instance()
+		var node = _presentScene.instance()
 		node.position = Vector2( position.x * cellSize.x + (0.5*cellSize.x), position.y * cellSize.y + (0.5*cellSize.y))
-		collectibles.add_child(node)
+		_collectibles.add_child(node)
 
 		# Remove present tile from tilemap
 		tileMap.set_cell(position.x, position.y, -1)
 
 		# Setup signals
-		node.connect("opened", self, "onPresentOpened", [node])
-		node.connect("collected", self, "onPresentCollected")
+		node.connect("opened", self, "_onPresentOpened")
+		node.connect("collected", self, "_onPresentCollected")
 
 		presentCount += 1
 
 		debugString += "(%s, %s) " % [node.position.x, node.position.y]
 
-	scoreCounter.setMaxScore(presentCount)
+	_scoreCounter.maxScore = presentCount
 
 	print_debug("\n", debugString % presentCount, "\n")
 
 # Called after generating quiz sets to store each quiz in a present
 func setupPresentQuizzes() -> void:
-	for present in collectibles.get_children():
+	for present in _collectibles.get_children():
 		var quiz: Dictionary = QuizGenerator.getNextQuiz()
 		# If no more quizzes were generated, remove present from scene
 		if quiz.empty():
@@ -144,76 +135,38 @@ func setupPresentQuizzes() -> void:
 		# Assign next quiz to present
 		present.quiz = quiz
 
-func killPlayer() -> void:
-	timer.pause()
-	paused = true
-	player.kill()
+func _killPlayer() -> void:
+	_timer.paused = true
+	_paused = true
+	_player.kill()
 
-func endLevel() -> void:
-	player.paused = true
-	endScreen.enabled = true
-	endScreen.visible = true
+func _endLevel() -> void:
+	_player.paused = true
+	_endScreen.enabled = true
+	_endScreen.visible = true
 
 # SIGNAL CALLBACKS
-func onPresentOpened(present: Present) -> void:
-	player.paused = true
-	currentPresent = present
+func _onPresentOpened() -> void:
+	_player.paused = true
 
-	match present.quiz.quizType:
-		QuizGenerator.QUIZ_TYPES.MATCH_IMAGE:
-			assert(quiz.matchImage, "'Match Image' quiz was opened, but no 'Quiz-FourChoices' instance exists in scene tree")
-			quiz.matchImage.prepareQuiz(present.quiz.target, present.quiz.extraAnswers)
-			quiz.matchImage.visible = true
-
-		QuizGenerator.QUIZ_TYPES.STARTS_WITH:
-			assert(quiz.matchWord, "'Starts With' quiz was opened, but no 'Quiz-Syllables' instance exists in scene tree")
-			quiz.matchWord.prepareQuiz(present.quiz.target, present.quiz.correctAnswers, present.quiz.wrongAnswers, present.quiz.quizType)
-			quiz.matchWord.visible = true
-
-		QuizGenerator.QUIZ_TYPES.RHYMES_WITH:
-			assert(quiz.matchWord, "'Rhymes With' quiz was opened, but no 'Quiz-Syllables' instance exists in scene tree")
-			quiz.matchWord.prepareQuiz(present.quiz.target, present.quiz.correctAnswers, present.quiz.wrongAnswers, present.quiz.quizType)
-			quiz.matchWord.visible = true
-
-		QuizGenerator.QUIZ_TYPES.HANGMAN:
-			assert(quiz.hangman, "'Hangman' quiz was opened, but no 'Quiz-Hangman' instance exists in scene tree")
-			quiz.hangman.prepareQuiz(present.quiz.target, present.quiz.hiddenTarget, present.quiz.answers)
-			quiz.hangman.visible = true
-
-		_:
-			assert(false, "The value '%s' does not exist in 'QuizGenerator.QUIZ_TYPES'" % present.quiz.quizType)
-
-func _onQuizCompleted():
-	quizCompleteTimer.start()
-	yield(quizCompleteTimer, "timeout")
-
-	currentPresent.collect()
-	currentPresent = null
-
-func onPresentCollected() -> void:
-	score += 1
-	scoreCounter.setScore(score)
-	player.paused = false
-	if quiz.matchImage:
-		quiz.matchImage.visible = false
-	if quiz.matchWord:
-		quiz.matchWord.visible = false
-	if quiz.hangman:
-		quiz.hangman.visible = false
+func _onPresentCollected() -> void:
+	_score += 1
+	_scoreCounter.score = _score
+	_player.paused = false
 
 func _onPlayerCrossedStartSign():
-	if not timer.isRunning():
-		timer.start(timerStart)
+	if not _timer.isRunning():
+		_timer.start(_timerStart)
 
 func _onPlayerReachedEndOfLevel():
-	timer.pause()
-	paused = true
-	endScreen.message = victoryMessage
-	endScreen.showNextLevelButton = true if self.nextLevelPath else false
-	endLevel()
+	_timer.paused = true
+	_paused = true
+	_endScreen.message = _victoryMessage
+	_endScreen.showNextLevelButton = true if _nextLevelPath else false
+	_endLevel()
 
 func _onGoToNextLevel() -> void:
-	var code: int = get_tree().change_scene(nextLevelPath)
+	var code: int = get_tree().change_scene(_nextLevelPath)
 
 	if OK != code:
 		var error: String = "Can't open resource path for next level" if ERR_CANT_OPEN else "Couldn't instantiate next level scene"
@@ -240,19 +193,19 @@ func _onBackToStartScreen() -> void:
 		get_tree().quit()
 
 func _onTimerTimeout():
-	endScreen.message = timeoutMessage
-	endScreen.showNextLevelButton = false
-	killPlayer()
+	_endScreen.message = _timeoutMessage
+	_endScreen.showNextLevelButton = false
+	_killPlayer()
 
 func _onPlayerDied():
-	endLevel()
+	_endLevel()
 
 # Determines if player is in cliff area or not and adjusts level bounds accordingly
 func _onPlayerExitedEntrance(body):
 	var entrance: Area2D = $Entrance
 	if body.position.x < entrance.position.x:
-		currentLevelBounds.bottom = cliffCameraBottomBound
+		_currentLevelBounds.bottom = _cliffCameraBottomBound
 	else:
-		currentLevelBounds.bottom = levelBounds.bottom
+		_currentLevelBounds.bottom = _levelBounds.bottom
 
-	setCameraBounds()
+	_setCameraBounds()

@@ -5,10 +5,10 @@ class_name ButtonQuiz extends Button
 var isCorrect: bool
 
 # METHODS
-func setUp(value: String, isCorrect: bool) -> void:
-	self.text = value
-	self.isCorrect = isCorrect
-	self.disabled = false
+func setUp(value: String, correct: bool) -> void:
+	text = value
+	isCorrect = correct
+	disabled = false
 	_clearStyles()
 
 func _clearStyles() -> void:
@@ -16,9 +16,9 @@ func _clearStyles() -> void:
 	$MarginContainer/TextureRect.texture = null
 
 func revealState(wasChosen: bool) -> void:
-	self.disabled = true
+	disabled = true
 
-	if self.isCorrect:
+	if isCorrect:
 		_setCorrect()
 		return
 

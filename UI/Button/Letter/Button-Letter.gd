@@ -1,12 +1,10 @@
 class_name ButtonLetter extends Button
 
 
-# VARS
-
 # METHODS
 func setUp(value: String) -> void:
-	self.text = value
-	self.disabled = false
+	text = value
+	disabled = false
 	_clearStyles()
 
 func _clearStyles() -> void:

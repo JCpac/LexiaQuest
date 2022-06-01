@@ -2,7 +2,7 @@ class_name Player extends KinematicBody2D
 
 
 # PRELOADS
-const dustCloudScene: PackedScene =  preload("res://player/dust-cloud/DustCloud.tscn")
+const _dustCloudScene: PackedScene =  preload("res://player/dust-cloud/DustCloud.tscn")
 
 # SIGNALS
 signal died
@@ -22,36 +22,29 @@ export(int, 0, 500, 10) var MAX_SPEED_WALK: int = 280
 export(int, 0, 50) var ACCEL_WALL_SLIDE: int = 10
 export(int, 0, 500, 10) var MAX_SPEED_WALL_SLIDE: int = 150
 
-# CONSTS
-
 # ENUMS
 enum STATES {WALKING, FALLING, WALL_SLIDING}
 
 # VARS
-onready var wallSlidingDetector: WallSlidingDetector = $WallSlidingDetector
-onready var hitbox: CollisionShape2D = $CollisionShape2D
-onready var sprite: AnimatedSprite = $AnimatedSprite
-onready var jumpSFX: AudioStreamPlayer = $JumpSFX
-onready var deathSFX: AudioStreamPlayer = $DeathSFX
-onready var animationPlayer: AnimationPlayer = $AnimationPlayer
-onready var dustCloudTimer: Timer = $DustCloudTimer
-onready var wallJumpFrictionTimer: Timer = $WallJumpFrictionTimer
 var velocity: Vector2 = Vector2()
-var canWallSlide: bool = true
 var paused: bool = false
-var previousState = null
-var state = STATES.FALLING setget _setState
 
-func _setState(newState):
-	previousState = state
-	state = newState
-	print_debug("New state: ", newState)
+onready var _wallSlidingDetector: WallSlidingDetector = $WallSlidingDetector
+onready var _hitbox: CollisionShape2D = $CollisionShape2D
+onready var _sprite: AnimatedSprite = $AnimatedSprite
+onready var _jumpSFX: AudioStreamPlayer = $JumpSFX
+onready var _animationPlayer: AnimationPlayer = $AnimationPlayer
+onready var _dustCloudTimer: Timer = $DustCloudTimer
+onready var _wallJumpFrictionTimer: Timer = $WallJumpFrictionTimer
+var _canWallSlide: bool = true
+var _previousState = null
+var _state = STATES.FALLING setget _setState
 
 # METHODS
 func _ready():
-	sprite.animation = "idle"
-	sprite.speed_scale = 1
-	sprite.play()
+	_sprite.animation = "idle"
+	_sprite.speed_scale = 1
+	_sprite.play()
 
 func _input(event: InputEvent):
 	if paused:
@@ -83,6 +76,22 @@ func _process(_delta: float):
 
 	_dustCloudsProcess()
 
+func _setState(stateValue):
+	_previousState = _state
+
+	_state = stateValue
+
+	print_debug("New state: ", _state)
+
+# Triggers player death
+func kill() -> void:
+	paused = true
+
+	# Play death animation and SFX
+	# "died" signal is emitted when animation is over
+	_animationPlayer.play("Death")
+	$DeathSFX.play()
+
 # Calculate and apply player horizontal movement changes made by their inputs.
 # Only meant to be used in `_physics_process()`.
 func _applyMovement(_delta: float) -> void:
@@ -90,7 +99,7 @@ func _applyMovement(_delta: float) -> void:
 	var pressingLeft: bool = Input.is_action_pressed("move_left")
 	var intendedDirection: int = int(pressingRight) - int(pressingLeft)	# -1 (left), 0 (both/none) or 1 (right)
 
-	match state:
+	match _state:
 		STATES.WALKING, STATES.FALLING:
 			# Apply gravity
 			velocity.y += ACCEL_GRAVITY
@@ -100,7 +109,7 @@ func _applyMovement(_delta: float) -> void:
 			velocity.x += ACCEL_WALK * intendedDirection
 
 			# Apply friction influence
-			if STATES.WALL_SLIDING != previousState or not wallJumpFrictionTimer.time_left:
+			if STATES.WALL_SLIDING != _previousState or not _wallJumpFrictionTimer.time_left:
 				_applyHorizontalFriction(intendedDirection)
 
 			# Clamp vertical and horizontal movement
@@ -119,8 +128,9 @@ func _applyMovement(_delta: float) -> void:
 			# Clamp vertical movement
 			velocity.y = clamp(velocity.y, MAX_SPEED_UP, MAX_SPEED_WALL_SLIDE)
 
+		# This method should have instructions for every state
 		_:
-			push_error("No matching state found in _physics_process()")
+			assert(false, "The value '%s' does not exist in 'Player.STATES'" % _state)
 
 # Calculates and applies the friction to be applied to the player.
 # No friction is applied if the player is moving in the same direction as their current velocity.
@@ -132,85 +142,85 @@ func _applyHorizontalFriction(intended_direction: int) -> void:
 		return
 
 	if abs(velocity.x) > 1:
-		velocity.x *= ACCEL_WALK_FRICTION if STATES.WALKING == state else ACCEL_AIR_FRICTION
+		velocity.x *= ACCEL_WALK_FRICTION if STATES.WALKING == _state else ACCEL_AIR_FRICTION
 	else:
 		velocity.x = 0
 
 func _changeSpriteDirection(intendedDirection: int) -> void:
 	if 0 != intendedDirection:
-		sprite.flip_h = bool(1 - intendedDirection)
+		_sprite.flip_h = bool(1 - intendedDirection)
 
 func _changeSpriteAnimation() -> void:
 	var absVelocityX: float = abs(velocity.x)
 
-	match state:
+	match _state:
 		STATES.WALKING:
 			if velocity.x:
-				sprite.animation = "walking"
-				sprite.speed_scale = absVelocityX/MAX_SPEED_WALK
+				_sprite.animation = "walking"
+				_sprite.speed_scale = absVelocityX/MAX_SPEED_WALK
 			else:
-				sprite.animation = "idle"
-				sprite.speed_scale = 1
+				_sprite.animation = "idle"
+				_sprite.speed_scale = 1
 
 		STATES.FALLING:
-			sprite.animation = "falling"
-			sprite.speed_scale = 1
+			_sprite.animation = "falling"
+			_sprite.speed_scale = 1
 
 		_:
-			sprite.animation = "idle"
-			sprite.speed_scale = 1
+			_sprite.animation = "idle"
+			_sprite.speed_scale = 1
 
 # Checks some conditions to determine which state the player should be in and applies it.
 # Only meant to be used in `_physics_process()`.
 func _changeState() -> void:
-	if STATES.WALKING != state and is_on_floor():
-		self.state = STATES.WALKING
-		wallJumpFrictionTimer.stop()
+	if STATES.WALKING != _state and is_on_floor():
+		self._state = STATES.WALKING
+		_wallJumpFrictionTimer.stop()
 
-	elif (STATES.WALL_SLIDING != state
-	and STATES.WALKING != state
-	and wallSlidingDetector.getCollisionSide()
-	and canWallSlide):
-		self.state = STATES.WALL_SLIDING
+	elif (STATES.WALL_SLIDING != _state
+	and STATES.WALKING != _state
+	and _wallSlidingDetector.getCollisionSide()
+	and _canWallSlide):
+		self._state = STATES.WALL_SLIDING
 		velocity.x = 0
 
-	elif STATES.FALLING != state and not is_on_floor() and not wallSlidingDetector.getCollisionSide():
-		self.state = STATES.FALLING
+	elif STATES.FALLING != _state and not is_on_floor() and not _wallSlidingDetector.getCollisionSide():
+		self._state = STATES.FALLING
 
 # Controls the creation of dust clouds when wall-sliding
 func _dustCloudsProcess() -> void:
-	if STATES.WALL_SLIDING == state and not dustCloudTimer.time_left:
-		var dustCloud: DustCloud = dustCloudScene.instance()
-		var positionX: float = global_position.x + ((hitbox.shape.extents.x / 2) * wallSlidingDetector.getCollisionSide())
-		var positionY: float = global_position.y + (hitbox.shape.extents.y / 2)
+	if STATES.WALL_SLIDING == _state and not _dustCloudTimer.time_left:
+		var dustCloud: DustCloud = _dustCloudScene.instance()
+		var positionX: float = global_position.x + ((_hitbox.shape.extents.x / 2) * _wallSlidingDetector.getCollisionSide())
+		var positionY: float = global_position.y + (_hitbox.shape.extents.y / 2)
 		dustCloud.global_position = Vector2(positionX, positionY)
 		get_tree().current_scene.add_child(dustCloud)
 
-		dustCloudTimer.start(dustCloudTimer.wait_time)
+		_dustCloudTimer.start(_dustCloudTimer.wait_time)
 
 		print_debug("Created dust cloud (%s, %s)" % [dustCloud.global_position.x, dustCloud.global_position.y])
 
 # Contains all the jumping and wall-jumping logic
 func _jump() -> void:
-	match state:
+	match _state:
 		# Jump
 		STATES.WALKING:
 			velocity.y = ACCEL_JUMP
-			self.state = STATES.FALLING
-			jumpSFX.play()
+			self._state = STATES.FALLING
+			_jumpSFX.play()
 
 		# Wall jump
 		STATES.WALL_SLIDING:
-			var wallCollisionSide: int = wallSlidingDetector.getCollisionSide()
+			var wallCollisionSide: int = _wallSlidingDetector.getCollisionSide()
 
-			self.state = STATES.FALLING
+			self._state = STATES.FALLING
 			velocity.y = ACCEL_JUMP
 			velocity.x = -MAX_SPEED_WALK if 1 == wallCollisionSide else MAX_SPEED_WALK
 			_changeSpriteDirection(-wallCollisionSide)
-			canWallSlide = false
-			jumpSFX.play()
+			_canWallSlide = false
+			_jumpSFX.play()
 
-			wallJumpFrictionTimer.start()
+			_wallJumpFrictionTimer.start()
 
 		# Nothing happens
 		_:
@@ -219,18 +229,8 @@ func _jump() -> void:
 # Checks if wall-sliding detectors are no longer colliding with the previous wall
 # Only meant to be used in `_physics_process()`
 func _checkCanWallSlideProcess() -> void:
-	if not canWallSlide and not wallSlidingDetector.getCollisionSide():
-		canWallSlide = true
-
-# Triggers player death
-func kill() -> void:
-	# Pause player
-	paused = true
-
-	# Play death animation and SFX
-	# "died" signal is emitted when animation is over
-	animationPlayer.play("Death")
-	deathSFX.play()
+	if not _canWallSlide and not _wallSlidingDetector.getCollisionSide():
+		_canWallSlide = true
 
 func _on_AnimationPlayer_animation_finished(anim_name:String):
 	match anim_name:

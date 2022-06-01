@@ -2,17 +2,17 @@ class_name DustCloud extends Node2D
 
 
 # EXPORTS
-export(float, 0, 10) var rotationSpeed = PI
+export(float, 0, 10) var _rotationSpeed: float = PI
 
 # VARS
-onready var sprite: Sprite = $Sprite
-onready var animation: AnimationPlayer = $AnimationPlayer
+onready var _sprite: Sprite = $Sprite
+onready var _animation: AnimationPlayer = $AnimationPlayer
 
 func _ready():
-	animation.play("DustCloudAnimation")
+	_animation.play("DustCloudAnimation")
 
 func _process(delta: float):
-	sprite.rotate(rotationSpeed * delta)
+	_sprite.rotate(_rotationSpeed * delta)
 
 func _on_AnimationPlayer_animation_finished(_anim_name):
 	queue_free()

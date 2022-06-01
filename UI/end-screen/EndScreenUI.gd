@@ -7,51 +7,49 @@ signal restartLevel
 signal backToStartScreen
 
 # EXPORTS
-export(bool) var enabled = false setget _setEnabled
-export(String, MULTILINE) var message = "Your message here..." setget _setMessage
-export(bool) var showNextLevelButton = true setget _setShowNextLevelButton
+export(bool) var enabled: bool = false setget _setEnabled
+export(String, MULTILINE) var message: String = "Your message here..." setget _setMessage
+export(bool) var showNextLevelButton: bool = true setget _setShowNextLevelButton
 
 # VARS
-onready var messageLabel: RichTextLabel = $VBoxContainer/MarginContainer/Message
-onready var nextLevelButton: Button = $VBoxContainer/Options/Next
-onready var restartLevelButton: Button = $VBoxContainer/Options/Restart
-onready var backButton: Button = $VBoxContainer/Options/Back
+onready var _messageLabel: RichTextLabel = $VBoxContainer/MarginContainer/Message
+onready var _nextLevelButton: Button = $VBoxContainer/Options/Next
+onready var _restartLevelButton: Button = $VBoxContainer/Options/Restart
+onready var _backButton: Button = $VBoxContainer/Options/Back
 
 # METHODS
 func _ready():
 	# Call setters
 	# (UI nodes won't be affected if setters are called before they're ready,
 	# which can happen if exported variables have non-default values)
-	_setEnabled(self.enabled)
-	_setMessage(self.message)
-	_setShowNextLevelButton(self.showNextLevelButton)
+	_setEnabled(enabled)
+	_setMessage(message)
+	_setShowNextLevelButton(showNextLevelButton)
 
-func _setMessage(text: String) -> void:
-	message = text
+func _setMessage(messageValue: String) -> void:
+	message = messageValue
 
-	if self.messageLabel:
-		self.messageLabel.bbcode_text = "[center]%s[/center]" % text
+	if _messageLabel:
+		_messageLabel.bbcode_text = "[center]%s[/center]" % message
 
-func _setShowNextLevelButton(showButton: bool) -> void:
-	showNextLevelButton = showButton
+func _setShowNextLevelButton(showNextLevelButtonValue: bool) -> void:
+	showNextLevelButton = showNextLevelButtonValue
 
-	if self.nextLevelButton:
-		self.nextLevelButton.visible = showButton
+	if _nextLevelButton:
+		_nextLevelButton.visible = showNextLevelButton
 
-func _setEnabled(value: bool) -> void:
-	enabled = value
+func _setEnabled(enabledValue: bool) -> void:
+	enabled = enabledValue
 
-	if self.nextLevelButton:
-		self.nextLevelButton.disabled = not value
-		self.nextLevelButton.mouse_default_cursor_shape = CURSOR_POINTING_HAND if value else CURSOR_ARROW
-
-	if self.restartLevelButton:
-		self.restartLevelButton.disabled = not value
-		self.restartLevelButton.mouse_default_cursor_shape = CURSOR_POINTING_HAND if value else CURSOR_ARROW
-
-	if self.backButton:
-		self.backButton.disabled = not value
-		self.backButton.mouse_default_cursor_shape = CURSOR_POINTING_HAND if value else CURSOR_ARROW
+	if _nextLevelButton:
+		_nextLevelButton.disabled = not enabled
+		_nextLevelButton.mouse_default_cursor_shape = CURSOR_POINTING_HAND if enabled else CURSOR_ARROW
+	if _restartLevelButton:
+		_restartLevelButton.disabled = not enabled
+		_restartLevelButton.mouse_default_cursor_shape = CURSOR_POINTING_HAND if enabled else CURSOR_ARROW
+	if _backButton:
+		_backButton.disabled = not enabled
+		_backButton.mouse_default_cursor_shape = CURSOR_POINTING_HAND if enabled else CURSOR_ARROW
 
 func _on_Next_pressed():
 	emit_signal("nextLevel")

@@ -5,23 +5,25 @@ class_name TimerUI extends PanelContainer
 signal timeout
 
 # VARS
-onready var label: Label = $Label
-onready var timer: Timer = $Timer
+var paused: bool = false setget _pauseTimer
 
-func _ready():
-	pass
+onready var _label: Label = $Label
+onready var _timer: Timer = $Timer
 
+# METHODS
 func _process(_delta):
-	label.text = _toFormattedMinuteString(timer.time_left)
+	_label.text = _toFormattedMinuteString(_timer.time_left as int)
 
 func start(timeInSeconds: int) -> void:
-	timer.start(timeInSeconds)
+	_timer.start(timeInSeconds)
 
-func pause() -> void:
-	timer.paused = true
+func _pauseTimer(pausedValue: bool) -> void:
+	paused = pausedValue
+	
+	_timer.paused = paused
 
 func isRunning() -> bool:
-	return bool(timer.time_left)
+	return bool(_timer.time_left as int)
 
 func _toFormattedMinuteString(timeInSeconds: int) -> String:
 	var minutes: int = 0
@@ -33,6 +35,6 @@ func _toFormattedMinuteString(timeInSeconds: int) -> String:
 	var formattedSeconds: String = "0%s" % timeInSeconds if timeInSeconds < 10 else "%s" % timeInSeconds
 	return "%s:%s" % [minutes, formattedSeconds]
 
-
+# SIGNAL CALLBACKS
 func _on_Timer_timeout():
 	emit_signal("timeout")

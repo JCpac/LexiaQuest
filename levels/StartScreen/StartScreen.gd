@@ -2,23 +2,24 @@ class_name StartScreen extends Node2D
 
 
 # CONSTS
-const firstLevelPath: String = "res://levels/Level-1/Level-1.tscn"
+const _firstLevelPath: String = "res://levels/Level-1/Level-1.tscn"
 
 # VARS
-onready var animation: AnimationPlayer = $AnimationPlayer
-onready var ui: StartScreenUI = $CanvasLayer/StartScreenUI
+onready var _animation: AnimationPlayer = $AnimationPlayer
+onready var _startScreenUI: StartScreenUI = $CanvasLayer/StartScreenUI
 
+# METHODS
 func _input(event):
 	# Left mouse button clicked during animation
 	if event is InputEventMouseButton and event.button_index == BUTTON_LEFT and event.pressed:
-		if animation.is_playing():
-			animation.advance(6)
+		if _animation.is_playing():
+			_animation.advance(6)
 			get_tree().set_input_as_handled()
 
 	# Pressed Enter during animation
 	if event.is_action_pressed("ui_accept"):
-		if animation.is_playing():
-			animation.advance(6)
+		if _animation.is_playing():
+			_animation.advance(6)
 			get_tree().set_input_as_handled()
 
 func _ready():
@@ -34,12 +35,12 @@ func _adjustSkyScale() -> void:
 
 	$ParallaxBackground/ParallaxLayer/Sky.scale = skyScale
 
-
+# SIGNAL CALLBACKS
 func _on_AnimationPlayer_animation_finished(_anim_name):
-	ui.enabled = true
+	_startScreenUI.enabled = true
 
 func _on_StartScreenUI_startGame():
-	var code: int = get_tree().change_scene(firstLevelPath)
+	var code: int = get_tree().change_scene(_firstLevelPath)
 
 	if OK != code:
 		var error: String = "Can't open resource path for first level" if ERR_CANT_OPEN else "Couldn't instantiate level scene"

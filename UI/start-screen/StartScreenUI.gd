@@ -6,22 +6,25 @@ signal startGame
 signal exitGame
 
 # EXPORTS
-export(bool) var enabled = false setget setEnabled
+export(bool) var enabled = false setget _setEnabled
 
+# METHODS
 func _ready():
-	setEnabled(enabled)
+	_setEnabled(enabled)
 
-func setEnabled(value: bool) -> void:
-	enabled = value
+func _setEnabled(enabledValue: bool) -> void:
+	enabled = enabledValue
 
 	var startButton: Button = $Start/Button
-	startButton.disabled = not value
-	startButton.mouse_default_cursor_shape = CURSOR_POINTING_HAND if value else CURSOR_ARROW
-
+	if startButton:
+		startButton.disabled = not enabled
+		startButton.mouse_default_cursor_shape = CURSOR_POINTING_HAND if enabled else CURSOR_ARROW
 	var exitButton: Button = $Exit/Button
-	exitButton.disabled = not value
-	exitButton.mouse_default_cursor_shape = CURSOR_POINTING_HAND if value else CURSOR_ARROW
+	if exitButton:
+		exitButton.disabled = not enabled
+		exitButton.mouse_default_cursor_shape = CURSOR_POINTING_HAND if enabled else CURSOR_ARROW
 
+# SIGNAL CALLBACKS
 func _on_StartButton_pressed():
 	emit_signal("startGame")
 
