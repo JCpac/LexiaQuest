@@ -4,7 +4,7 @@
 [ext_resource path="res://addons/adbox/DialogueBox.gd" type="Script" id=2]
 [ext_resource path="res://assets/Sprites/sign_poster.png" type="Texture" id=3]
 [ext_resource path="res://assets/Sound/sfxr.me/text.wav" type="AudioStream" id=4]
-[ext_resource path="res://levels/Level_1/Signs/StartSign/StartSign.gd" type="Script" id=5]
+[ext_resource path="res://levels/Signs/StartSign/StartSign.gd" type="Script" id=5]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 16, 32 )

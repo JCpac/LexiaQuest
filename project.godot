@@ -37,7 +37,7 @@ _global_script_classes=[ {
 "base": "Node2D",
 "class": "EndSign",
 "language": "GDScript",
-"path": "res://levels/Level_1/Signs/EndSign/EndSign.gd"
+"path": "res://levels/Signs/EndSign/EndSign.gd"
 }, {
 "base": "Node2D",
 "class": "Level",
@@ -72,7 +72,7 @@ _global_script_classes=[ {
 "base": "Node2D",
 "class": "StartSign",
 "language": "GDScript",
-"path": "res://levels/Level_1/Signs/StartSign/StartSign.gd"
+"path": "res://levels/Signs/StartSign/StartSign.gd"
 }, {
 "base": "PanelContainer",
 "class": "TimerUI",

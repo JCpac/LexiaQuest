@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=2]
 
-[ext_resource path="res://levels/Level_1/Signs/EndSign/EndSign.gd" type="Script" id=1]
+[ext_resource path="res://levels/Signs/EndSign/EndSign.gd" type="Script" id=1]
 [ext_resource path="res://assets/Sprites/sign_poster.png" type="Texture" id=3]
 
 [sub_resource type="RectangleShape2D" id=1]
