@@ -4,8 +4,8 @@ extends Node
 # CONSTS
 const DB_PATH = "res://assets/Database/"
 const MATCH_IMAGE_DB = "match-image.json"
-const STARTS_WITH_DB = "start-syllable.json"
-const RHYMES_DB = "rhymes.json"
+const STARTS_WITH_DB = "starts-with.json"
+const RHYMES_WITH_DB = "rhymes-with.json"
 const STARTS_WITH_SYLLABLE_PROP = "start"
 const STARTS_WITH_WORDS_PROP = "words"
 
@@ -13,7 +13,7 @@ const STARTS_WITH_WORDS_PROP = "words"
 var allWords: Array = []	# `Array` of `Strings` with all unique words in the DB files
 var matchImageWords: Array = []	# `Array` of `Arrays` of `Strings`. The first String is used as the quiz target and should have a matching image
 var startsWithWords: Array = []	# `Array` of `Dictionaries` with properties `start` (`String`) and `words` (`Array` of `Strings`)
-var rhymesWords: Array = []	# `Array` of `Arrays` of `Strings`
+var rhymesWithWords: Array = []	# `Array` of `Arrays` of `Strings`
 
 # METHODS
 func _init():
@@ -23,13 +23,13 @@ func _loadDbContents() -> void:
 	var dbFile: File = File.new()
 	matchImageWords = _loadMatchImageWords(dbFile)
 	startsWithWords = _loadStartsWithWords(dbFile)
-	rhymesWords = _loadRhymesWords(dbFile)
+	rhymesWithWords = _loadRhymesWithWords(dbFile)
 	allWords = _getAllUniqueWords()
 	dbFile.close()
 
 	print_debug("DB: Match Image words (%s):\n" % len(matchImageWords), matchImageWords)
 	print_debug("DB: Starts With words (%s):\n" % len(startsWithWords), startsWithWords)
-	print_debug("DB: Rhymes words (%s):\n" % len(rhymesWords), rhymesWords)
+	print_debug("DB: Rhymes With words (%s):\n" % len(rhymesWithWords), rhymesWithWords)
 	print_debug("DB: all unique words (%s):\n" % len(allWords), allWords)
 
 func _loadMatchImageWords(dbFile: File) -> Array:
@@ -52,8 +52,8 @@ func _loadStartsWithWords(dbFile: File) -> Array:
 
 	return parseResult.result
 
-func _loadRhymesWords(dbFile: File) -> Array:
-	dbFile.open(DB_PATH + RHYMES_DB, File.READ)
+func _loadRhymesWithWords(dbFile: File) -> Array:
+	dbFile.open(DB_PATH + RHYMES_WITH_DB, File.READ)
 	var parseResult: JSONParseResult = JSON.parse(dbFile.get_as_text())
 
 	assert(parseResult.error == OK, _getFailedParseMessage("Rhymes", parseResult))
@@ -78,7 +78,7 @@ func _getAllUniqueWords() -> Array:
 			if not word in result:
 				result.append(word)
 
-	for wordArray in rhymesWords:
+	for wordArray in rhymesWithWords:
 		for word in wordArray:
 			if not word in result:
 				result.append(word)

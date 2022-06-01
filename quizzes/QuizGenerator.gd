@@ -25,7 +25,7 @@ func randomizeQuizSets() -> void:
 	_quizSet.shuffle()
 
 # Gets the next quiz in the last generated set of quizzes
-# Quiz sets can be generated with `generateMatchImageQuizSet()`, `generateStartsWithQuizSet()`, `generateRhymesQuizSet()` and `generateHangmanQuizSet()`
+# Quiz sets can be generated with `generateMatchImageQuizSet()`, `generateStartsWithQuizSet()`, `generateRhymesWithQuizSet()` and `generateHangmanQuizSet()`
 # Returns an empty `Dictionary` if no quizzes have been generated or the last set of quizzes has been exhausted
 # If quizzes of multiple types have been generated, they can be distinguished with the property `quizType` (`QuizGenerator.QUIZ_TYPES`)
 func getNextQuiz() -> Dictionary:
@@ -109,16 +109,16 @@ func generateStartsWithQuizSet(numOfCorrectAnswersPerQuiz: int, numOfWrongAnswer
 
 		_quizSet.append(quizDictionary)
 
-# Generate a random set of "Rhymes" quizzes. Each quiz can be retrieved by calling `getNextQuiz()`
+# Generate a random set of "Rhymes With" quizzes. Each quiz can be retrieved by calling `getNextQuiz()`
 # These quizzes are `Dictionaries` with the properties:
 # - `quizType` (`QuizGenerator.QUIZ_TYPES.RHYMES_WITH`)
 # - `target` (`String`)
 # - `correctAnswers` (`Array` of `Strings`)
 # - `wrongAnswers` (`Array` of `Strings`)
 # Each quiz generates with a total of `numOfCorrectAnswersPerQuiz + numOfWrongAnswersPerQuiz` answers
-func generateRhymesQuizSet(numOfCorrectAnswersPerQuiz: int, numOfWrongAnswersPerQuiz: int) -> void:
-	JsonLoader.rhymesWords.shuffle()
-	for wordSet in JsonLoader.rhymesWords:
+func generateRhymesWithQuizSet(numOfCorrectAnswersPerQuiz: int, numOfWrongAnswersPerQuiz: int) -> void:
+	JsonLoader.rhymesWithWords.shuffle()
+	for wordSet in JsonLoader.rhymesWithWords:
 		# Setup dictionary structure
 		var quizDictionary: Dictionary = {}
 		quizDictionary.quizType = QUIZ_TYPES.RHYMES_WITH
