@@ -172,7 +172,7 @@ func _lockPlayerInLevelBounds() -> void:
 
 # Check if the player has collected the minimum number of presents to proceed to the next level and updates the `EndSign`'s state
 func _updateCanLevelEnd() -> void:
-	var endSign: EndSign = $Signs/EndSign
+	var endSign: TutorialSign = $Signs/EndSign
 	if not _scoreCounter or not endSign:
 		return
 
@@ -202,10 +202,6 @@ func _onPresentCollected() -> void:
 	_scoreCounter.score = _scoreCounter.score + 1
 	_player.paused = false
 	_updateCanLevelEnd()
-
-func _onPlayerCrossedStartSign():
-	if not _timer.isRunning():
-		_timer.start()
 
 func _onPlayerReachedEndOfLevel():
 	_timer.paused = true
@@ -249,12 +245,18 @@ func _onTimerTimeout():
 func _onPlayerDied():
 	_endLevel()
 
-# Determines if player is in cliff area or not and adjusts level bounds accordingly
-func _onPlayerExitedEntrance(body):
-	var entrance: Area2D = $Entrance
-	if body.position.x < entrance.position.x:
+func _onPlayerCrossedStartSign(player):
+	var startSign: TutorialSign = $Signs/StartSign
+	# Player went to the left:
+	# set cliff level bounds if there is a cliff
+	if player.position.x < startSign.position.x and _hasCliff:
 		_currentLevelBounds.bottom = _cliffCameraBottomBound
+	# Player went to the right:
+	# set regular level bounds and start timer if it's not running
 	else:
 		_currentLevelBounds.bottom = _levelBounds.bottom
+
+		if not _timer.isRunning():
+			_timer.start()
 
 	_setCameraBounds()
