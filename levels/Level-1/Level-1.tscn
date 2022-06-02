@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=16 format=2]
 
 [ext_resource path="res://assets/TileSets/Foreground.tres" type="TileSet" id=1]
 [ext_resource path="res://UI/level-timer/TimerUI.tscn" type="PackedScene" id=2]
@@ -8,6 +8,7 @@
 [ext_resource path="res://UI/level-score/ScoreUI.tscn" type="PackedScene" id=6]
 [ext_resource path="res://levels/Signs/StartSign/StartSign.tscn" type="PackedScene" id=7]
 [ext_resource path="res://levels/Signs/EndSign/EndSign.tscn" type="PackedScene" id=8]
+[ext_resource path="res://levels/Signs/Tutorial/TutorialSign.tscn" type="PackedScene" id=9]
 [ext_resource path="res://UI/end-screen/EndScreenUI.tscn" type="PackedScene" id=11]
 [ext_resource path="res://assets/TileSets/Presents.tres" type="TileSet" id=13]
 [ext_resource path="res://player/Player.tscn" type="PackedScene" id=15]
@@ -101,10 +102,23 @@ __meta__ = {
 
 [node name="StartSign" parent="Signs" instance=ExtResource( 7 )]
 position = Vector2( 80, -16 )
+dialogueText = [ "Bem-vindo ao jogo!", "Usa a [b]seta para a esquerda[/b]/[b]seta para a direita[/b] ou [b]A[/b]/[b]D[/b] para andar.", "Quando passares para a direita deste sinal, o temporizador começa.", "Boa sorte!" ]
 
 [node name="EndSign" parent="Signs" instance=ExtResource( 8 )]
 position = Vector2( 3936, 560 )
 _hitboxHeight = 128
+
+[node name="TutorialSign1" parent="Signs" instance=ExtResource( 9 )]
+position = Vector2( 1264, 944 )
+dialogueText = [ "Usa a [b]seta para cima[/b] ou [b]W[/b] para saltar." ]
+
+[node name="TutorialSign2" parent="Signs" instance=ExtResource( 9 )]
+position = Vector2( 2048, 880 )
+dialogueText = [ "Podes saltar em paredes.", "Experimenta saltar de uma parede para outra." ]
+
+[node name="TutorialSign3" parent="Signs" instance=ExtResource( 9 )]
+position = Vector2( 2528, 368 )
+dialogueText = [ "Precisas de apanhar 3 presentes para acabar os níveis.", "Mas, a tua pontuação é maior quantos mais presentes colecionares!" ]
 
 [node name="Player" parent="." instance=ExtResource( 15 )]
 position = Vector2( -96, -16 )

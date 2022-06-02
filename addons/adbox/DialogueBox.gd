@@ -37,129 +37,133 @@ class_name DialogueBox, "icon.png"
 export var message_sound : AudioStreamSample
 export var font : Font
 export var action_name : String
-export var wait_time = 0.2
-export var block_time = 0.3
-#export var frames : SpriteFrames
+export var characterRevealDelay = 0.2
 export var margin_top_bottom = 15
 export var margin_left_right = 15
-var time : float
 
-var text = []
-var num : int
-var wait : bool = false
-var block_walk : bool
-var hidden : bool = true
+var _text = []
+var _textIndex : int
 
-var audio : AudioStreamPlayer
-var audioShouldPlay : bool = true
+var _waitingForInput : bool = false
 
-var TextBox : RichTextLabel
-var InputBlocker : Timer
-var ShowTimer : Timer
+var _audio : AudioStreamPlayer
 
-var block_box_timer : bool
+var textBox : RichTextLabel
+var _characterRevealTimer : Timer
+var _percent_addition : float	# % that each character composes in the current piece of text (`1/text.length()`)
 
-var percent_addition : float
-
-signal dialogue_exit()
+signal dialogue_exit
 
 func _enter_tree():
-	TextBox = load("res://addons/adbox/textbox.tscn").instance()
-	TextBox.add_font_override("normal_font", font)
+	textBox = load("res://addons/adbox/textbox.tscn").instance()
+	textBox.add_font_override("normal_font", font)
+	textBox.bbcode_enabled = true
+	textBox.fit_content_height = true
+	textBox.mouse_filter = MOUSE_FILTER_IGNORE
 
-	var container = Container.new()
-	container.anchor_right = 1
-	container.anchor_bottom = 1
-	container.margin_left = margin_left_right
-	container.margin_top = margin_top_bottom
-	container.margin_right = -margin_left_right
-	container.margin_bottom = -margin_top_bottom
+	_characterRevealTimer = Timer.new()
+	_characterRevealTimer.wait_time = characterRevealDelay
+	_characterRevealTimer.connect("timeout", self, "_onCharacterRevealTimerTimeout")
 
-	InputBlocker = Timer.new()
-	InputBlocker.one_shot = true
-	InputBlocker.wait_time = block_time
+	add_child(textBox)
+	add_child(_characterRevealTimer)
 
-	ShowTimer = Timer.new()
-	ShowTimer.wait_time = wait_time
-
-	add_child(container)
-	container.add_child(TextBox)
-
-	TextBox = container.get_node(TextBox.name)
-	container.add_child(InputBlocker)
-	container.add_child(ShowTimer)
-
-	InputBlocker.connect("timeout", self, "_on_InputBlocker_timeout")
-	ShowTimer.connect("timeout", self, "_on_Timer_timeout")
-	hide()
-
-func _ready():
 	message_sound.loop_mode = message_sound.LOOP_DISABLED
 	message_sound.loop_begin = 0
 	message_sound.loop_end = 0
 
-	audio = AudioStreamPlayer.new()
-	audio.stream = message_sound
-	audio.volume_db = -12
-	add_child(audio)
+	_audio = AudioStreamPlayer.new()
+	_audio.stream = message_sound
+	_audio.volume_db = -12
+	add_child(_audio)
 
-func _process(delta):
-	if hidden:
-		return
+	size_flags_vertical = SIZE_EXPAND_FILL
 
-func _input(event):
-	if Input.is_action_just_pressed(action_name):
-		if wait == true:
-			if TextBox.percent_visible != 1:
-				TextBox.percent_visible = 1
-				return
-			if num < len(text) - 1:
-				num += 1
-				TextBox.text = text[num]
-				to_beginning()
-			elif TextBox.percent_visible == 1:
-				num = 0
-				TextBox.percent_visible = .05
-				hide()
-				InputBlocker.wait_time = block_time
-				InputBlocker.start()
 
+# METHODS - PUBLIC
+
+
+# Setup `DialogueBox` and reveal first piece of text
 func talk(textarray : Array):
 	"""
 	Use this function to activate the DialogueBox
 	"""
-	text = textarray
-	block_walk = true
-	num = 0
-	TextBox.text = text[num]
-	show()
-	to_beginning()
+	_text = textarray
+	_textIndex = 0
+	_startRevealingCurrentText()
 
-func to_beginning():
-	percent_addition = 1 / float(TextBox.text.length())
-
-	ShowTimer.wait_time = wait_time
-	TextBox.percent_visible = 0.01
-
-	wait = false
-	hidden = false
-	audioShouldPlay = true
-
-	ShowTimer.start()
-
-func _on_Timer_timeout():
-	if TextBox.percent_visible < 1:
-		TextBox.percent_visible += percent_addition
-		audio.play(0)
-	else:
-		audioShouldPlay = false
-		audio.stop()
-		ShowTimer.stop()
-	wait = true
-
-func _on_InputBlocker_timeout():
-	hidden = true
-	block_walk = false
-	InputBlocker.stop()
-	audio.stop()
+# Stop and reset `DialogueBox`
+# Emits `dialogue_exit`, same as when `DialogueBox` runs out of text to display
+func stopAndReset():
+	textBox.percent_visible = 0
+	_textIndex = 0
+	_audio.stop()
+	_characterRevealTimer.stop()
 	emit_signal("dialogue_exit")
+
+
+# METHODS - PRIVATE
+
+
+# Setup and start the revealing process of the current piece of text
+# `DialogueBox` will not be waiting for input during the first `characterRevealTimer` countdown
+func _startRevealingCurrentText():
+	textBox.bbcode_text = _text[_textIndex]
+	textBox.percent_visible = 0
+	_percent_addition = 1 / float(textBox.text.length())
+	_characterRevealTimer.wait_time = characterRevealDelay
+
+	_waitingForInput = false
+
+	_characterRevealTimer.start()
+
+# YOU WON'T BELIEVE THIS SIMPLE TRICK THEY *DON'T* WANT YOU TO KNOW
+# This forces `DialogueBox` to update it's size to fit the text it contains
+func _resizeControlNodes() -> void:
+	# Shrink label
+	var textBox: RichTextLabel = get_node("TextBox")
+	textBox.rect_size.y = textBox.rect_min_size.y
+
+	# Set `DialogueBox`'s minimum size to its label's size (which fits itself to its content)
+	# This forces `DialogueBox` to grow to fit the minimum size
+	rect_min_size.y = textBox.rect_size.y
+
+
+# METHODS - SIGNAL CALLBACKS
+
+
+# The "heart" of the character revealing process. Reveals 1 character after each `characterRevealTimer` countdown
+# Timer will stop after the entire text is revealed
+func _onCharacterRevealTimerTimeout():
+	_resizeControlNodes()
+
+	# If some of the text is hidden, show a bit more and play audio SFX
+	if textBox.percent_visible < 1:
+		textBox.percent_visible += _percent_addition
+		_audio.play(0)
+	# If text is in full display, stop audio SFX (in case it's still playing)
+	# and stop character reveal timer
+	else:
+		_audio.stop()
+		_characterRevealTimer.stop()
+
+	_waitingForInput = true
+
+func _on_Dialogue_gui_input(event):
+	if (event is InputEventMouseButton
+	and event.button_index == BUTTON_LEFT
+	and not event.pressed
+	and _waitingForInput):
+		# If some text is still hidden, reveal it completely
+		if textBox.percent_visible != 1:
+			textBox.percent_visible = 1
+			_resizeControlNodes()
+			return
+
+		# If not at the last piece of text, start revealing the next one
+		if _textIndex < len(_text) - 1:
+			_textIndex += 1
+			_startRevealingCurrentText()
+		# If at the last piece of text, stop and reset the `DialogueBox`
+		elif textBox.percent_visible == 1:
+			stopAndReset()

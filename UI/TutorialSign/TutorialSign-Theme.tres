@@ -1,0 +1,9 @@
+[gd_resource type="Theme" load_steps=3 format=2]
+
+[ext_resource path="res://UI/Signs/Signs-Font.tres" type="DynamicFont" id=1]
+[ext_resource path="res://UI/Signs/Signs-FontBold.tres" type="DynamicFont" id=2]
+
+[resource]
+default_font = ExtResource( 1 )
+RichTextLabel/fonts/bold_font = ExtResource( 2 )
+RichTextLabel/fonts/normal_font = ExtResource( 1 )

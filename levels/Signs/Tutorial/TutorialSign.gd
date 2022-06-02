@@ -1,24 +1,19 @@
-class_name StartSign extends Node2D
-
-
-# SIGNALS
-
-
-signal playerHasCrossed
+class_name TutorialSign extends Node2D
 
 
 # EXPORTS
 
 
-export(Array, String, MULTILINE) var dialogueText = []
+export(Array, String, MULTILINE) var dialogueText: Array = []
+export(float, 0, 5, 0.1) var _promptDelayAfterDialogueExit: float = 0.8
 
 
 # VARS
 
 
-onready var _dialoguePanel: PanelContainer = $UI/Dialogue
-onready var _dialogueBox: DialogueBox = $UI/Dialogue/DialogueBox
-onready var _promptPanel: PanelContainer = $UI/Prompt
+onready var _dialoguePanel: PanelContainer = $UI/Canvas/Dialogue
+onready var _dialogueBox: DialogueBox = $UI/Canvas/Dialogue/DialogueBox
+onready var _promptPanel: PanelContainer = $UI/Canvas/Prompt
 var _hasPlayer: bool = false
 
 
@@ -37,13 +32,9 @@ func _onPlayerEnteredSignArea(_body):
 	_hasPlayer = true
 	_promptPanel.show()
 
-func _onPlayerExitedSignArea(body):
+func _onPlayerExitedSignArea(_body):
 	_hasPlayer = false
 	_dialogueBox.stopAndReset()
-
-	# Only emit signal if player crossed to the right of the sign
-	if body.position.x > position.x:
-		emit_signal("playerHasCrossed")
 
 # Player started reading the sign
 func _onPlayerStartedReading(event):
@@ -57,6 +48,7 @@ func _onPlayerStartedReading(event):
 
 func _on_DialogueBox_dialogue_exit():
 	_dialoguePanel.hide()
+	yield(get_tree().create_timer(_promptDelayAfterDialogueExit), "timeout")
 
 	if _hasPlayer:
 		_promptPanel.show()
