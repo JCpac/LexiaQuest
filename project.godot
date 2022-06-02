@@ -77,7 +77,7 @@ _global_script_classes=[ {
 "base": "Node2D",
 "class": "TutorialSign",
 "language": "GDScript",
-"path": "res://levels/Signs/Tutorial/TutorialSign.gd"
+"path": "res://levels/Sign/Sign.gd"
 }, {
 "base": "Node2D",
 "class": "WallSlidingDetector",
