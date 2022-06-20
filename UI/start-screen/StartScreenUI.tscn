@@ -17,8 +17,8 @@ anchor_top = 0.2
 anchor_right = 1.0
 anchor_bottom = 0.5
 bbcode_enabled = true
-bbcode_text = "[center]Dyslexia Platformer Project[/center]"
-text = "Dyslexia Platformer Project"
+bbcode_text = "[center]Lexia Quest[/center]"
+text = "Lexia Quest"
 __meta__ = {
 "_edit_use_anchors_": true
 }
