@@ -91,7 +91,7 @@ func generateStartsWithQuizSet(numOfCorrectAnswersPerQuiz: int, numOfWrongAnswer
 		var wordsToExclude: Array = correctAnswers.duplicate()
 		var aquiredExtraAnswers: Array = []
 		while quizDictionary.wrongAnswers.size() < numOfWrongAnswersPerQuiz:
-			aquiredExtraAnswers = _getExtraRandomWords(numOfWrongAnswersPerQuiz - quizDictionary.wrongAnswers.size(), wordsToExclude)
+			aquiredExtraAnswers = _getExtraRandomWords(numOfWrongAnswersPerQuiz - quizDictionary.wrongAnswers.size(), wordsToExclude, QUIZ_TYPES.STARTS_WITH)
 
 			# Find indexes of the random extra answers that aren't actually wrong
 			var indexesToExclude: Array = []
@@ -139,7 +139,7 @@ func generateRhymesWithQuizSet(numOfCorrectAnswersPerQuiz: int, numOfWrongAnswer
 			quizDictionary.correctAnswers.append(correctAnswers[i])
 
 		# Pick random wrong answers
-		quizDictionary.wrongAnswers = _getExtraRandomWords(numOfWrongAnswersPerQuiz, wordsToExclude)
+		quizDictionary.wrongAnswers = _getExtraRandomWords(numOfWrongAnswersPerQuiz, wordsToExclude, QUIZ_TYPES.RHYMES_WITH)
 
 		_quizSet.append(quizDictionary)
 
@@ -233,15 +233,45 @@ func _generateHangmanAnswers(targetWord: String, hiddenTargetWord: String, numOf
 	return answerChars
 
 # Finds and returns `numOfExtraWords` random words from the DB files that do not exist in `wordsToExclude`
-func _getExtraRandomWords(numOfExtraWords: int, wordsToExclude: Array) -> Array:
+func _getExtraRandomWords(numOfExtraWords: int, wordsToExclude: Array, quizType) -> Array:
 	var extraAnswers: Array = []
 
-	while len(extraAnswers) < numOfExtraWords:
-		# Keep picking random words until the picked word does not exist in `wordsToExclude`
-		var randomIndex: int = _rng.randi_range(0, len(AllDB.words) - 1)
-		while AllDB.words[randomIndex] in wordsToExclude:
-			randomIndex = _rng.randi_range(0, len(AllDB.words) - 1)
+	match quizType:
+		QUIZ_TYPES.STARTS_WITH:
+			while len(extraAnswers) < numOfExtraWords:
+				# Keep picking random words until the picked word does not exist in `wordsToExclude`
+				var randomIndex: int = _rng.randi_range(0, len(AllDB.words) - 1)
+				while AllDB.words[randomIndex] in wordsToExclude:
+					randomIndex = _rng.randi_range(0, len(AllDB.words) - 1)
 
-		extraAnswers.append(AllDB.words[randomIndex])
+				extraAnswers.append(AllDB.words[randomIndex])
+
+		# Prevent "Rhymes With" quizzes from retrieving wrong answers from all files,
+		# so that rhyme maintenance is restricted to the `Rhymes-With.gd` file, instead of all DB files
+		QUIZ_TYPES.RHYMES_WITH:
+			# Duplicate rhymes DB and remove set of words that correspond to the words in `wordsToExclude`
+			var rhymeWordSets: Array = RhymesWithDB.words.duplicate(true)
+			var breakOutOfOuterLoop: bool = false
+			for wordSet in rhymeWordSets:
+				if breakOutOfOuterLoop:
+					break;
+
+				for word in wordSet:
+					if word in wordsToExclude:
+						rhymeWordSets.erase(wordSet)
+						breakOutOfOuterLoop = true
+						break;
+
+			while len(extraAnswers) < numOfExtraWords:
+				# Pick a random word from a random word set
+				var randomSetIndex: int = _rng.randi_range(0, len(rhymeWordSets) - 1)
+				var randomSet: Array = rhymeWordSets[randomSetIndex]
+				var randomWordIndex: int = _rng.randi_range(0, len(randomSet) - 1)
+				var randomWord: String = randomSet[randomWordIndex]
+
+				extraAnswers.append(randomWord)
+
+		_:
+			assert(false, "Other quiz types are not meant to call this method")
 
 	return extraAnswers
