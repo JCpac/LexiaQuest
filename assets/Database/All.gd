@@ -5,6 +5,7 @@ var words: Array = []
 
 func _ready():
 	words = _getAllUniqueWords()
+	print_debug("Registered a total of %s unique words in the database files." % words.size())
 
 func _getAllUniqueWords() -> Array:
 	var result: Array = []
